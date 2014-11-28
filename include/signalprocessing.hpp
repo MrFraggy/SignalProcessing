@@ -5,6 +5,7 @@
 
 class Signal;
 
+namespace tools {
 namespace haar 
 {
 	void analyse(Signal& s);
@@ -17,6 +18,10 @@ namespace biortho97
 	void synthese(Signal& s);
 }
 
+Signal& interpolation(Signal& in);
+Signal& decimation(Signal& in);
+Signal& filtrage(Signal& x, const Signal& h);
+}
 
 
 

@@ -12,11 +12,18 @@ public:
 	Signal(const Signal& other);
 	~Signal() = default;
 
+	Signal& operator=(const Signal& other);
+
 	double& operator[](int index);
 	double operator[](int index) const;
 
 	bool load(const std::string& filename);
 	bool save(const std::string& filename);
+
+	bool savepng(const std::string& filename);
+
+	int getSize() const;
+	int getOffset() const;
 
 protected:
 	std::unique_ptr<double> data;

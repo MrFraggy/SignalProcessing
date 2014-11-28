@@ -5,11 +5,23 @@
 #include <vector>
 #include <limits>
 
-Signal::Signal(int size, int t) : data(new double[size]), size(size), offset(t) {}
+Signal::Signal(int size, int t) : data(new double[size]), size(size), offset(t)
+{
+	std::memset(data.get(), 0, sizeof(double)*size);
+}
 
 Signal::Signal(const Signal& other) : Signal(size)
 {
 	std::memcpy(data.get(), other.data.get(), sizeof(double)*size);
+}
+
+Signal& Signal::operator=(const Signal& other)
+{
+	size = other.size;
+	offset = other.offset;
+	data.reset(new double[size]);
+	std::memcpy(data.get(), other.data.get(), sizeof(double)*size);
+	return *this;
 }
 
 double& Signal::operator[](int index)
@@ -56,9 +68,8 @@ bool Signal::save(const std::string& filename)
 
 	if(!out || !out.is_open()) return false;
 
-	out.flags(std::ios::scientific);
-	// out.precision(std::numeric_limits<double>::digits10 + 1);
-	out.precision(7);
+	out.flags(std::ios::scientific); // for exponential
+	out.precision(7); // 7 digits
 
 	for(int i = 0; i < size; ++i)
 	{
@@ -67,4 +78,19 @@ bool Signal::save(const std::string& filename)
 	}
 
 	return true;
+}
+
+bool Signal::savepng(const std::string& filename)
+{
+	return false;
+}
+
+int Signal::getSize() const
+{
+	return size;
+}
+
+int Signal::getOffset() const
+{
+	return offset;
 }
