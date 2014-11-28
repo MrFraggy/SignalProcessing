@@ -8,15 +8,17 @@
 class Signal 
 {
 public:
-	Signal(unsigned int size);
+	Signal(int size, int t = 0);
 	Signal(const Signal& other);
 	~Signal() = default;
 
-	double& operator[](unsigned int index);
-	double operator[](unsigned int index) const;
+	double& operator[](int index);
+	double operator[](int index) const;
 
+protected:
 	std::unique_ptr<double> data;
-	unsigned int size;
+	int size;
+	int offset;
 };
 
 #endif
