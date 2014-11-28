@@ -5,12 +5,19 @@
 
 class Signal;
 
-void analyse_haar(Signal& s);
+namespace haar 
+{
+	void analyse(Signal& s);
+	void synthese(Signal& s);
+}
 
-void synthese_haar(Signal& s);
+namespace biortho97
+{
+	void analyse(Signal& s);
+	void synthese(Signal& s);
+}
 
-void analyse_97(Signal& s);
 
-void synthese_97(Signal& s);
+
 
 #endif
