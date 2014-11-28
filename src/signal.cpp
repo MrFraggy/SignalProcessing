@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <fstream>
 #include <vector>
+#include <limits>
 
 Signal::Signal(int size, int t) : data(new double[size]), size(size), offset(t) {}
 
@@ -55,7 +56,11 @@ bool Signal::save(const std::string& filename)
 
 	if(!out || !out.is_open()) return false;
 
-	for(uint i = 0; i < size; ++i)
+	out.flags(std::ios::scientific);
+	// out.precision(std::numeric_limits<double>::digits10 + 1);
+	out.precision(7);
+
+	for(int i = 0; i < size; ++i)
 	{
 		out << data.get()[i];
 		out << std::endl;
