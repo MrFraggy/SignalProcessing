@@ -26,3 +26,9 @@
 
 bin/*
 !bin/README
+
+# QtFiles
+*.creator
+*.creator.user
+*.config
+*.includes
