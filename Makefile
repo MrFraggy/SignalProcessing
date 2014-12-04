@@ -28,5 +28,6 @@ $(PATH_OBJ)/%.o: $(PATH_SRC)/%.cpp
 	@echo "Compiling $<"
 	g++ $(GCC_OPTS) -c $< -o $@ $(PATH_INCLUDE)
 
+
 clean:
 	rm -rf $(PATH_OBJ)/*.o

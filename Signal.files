@@ -1,5 +1,0 @@
-include/signal.hpp
-include/signalprocessing.hpp
-src/main.cpp
-src/signal.cpp
-src/signalprocessing.cpp

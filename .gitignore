@@ -32,3 +32,4 @@ bin/*
 *.creator.user
 *.config
 *.includes
+*.files

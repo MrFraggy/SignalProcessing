@@ -1,4 +1,5 @@
 #include "signal.hpp"
+#include "gnuplot_c.h"
 #include <cstring>
 #include <stdexcept>
 #include <fstream>
@@ -82,6 +83,10 @@ bool Signal::save(const std::string& filename)
 
 bool Signal::savepng(const std::string& filename)
 {
+	/*auto *plot = gpc_init_2d("Signal", "X", "Y", 1.f, GPC_SIGNED, GPC_MULTIPLOT, GPC_KEY_DISABLE);
+	gpc_plot_2d(plot, data.get(), size, "Signal", -offset, size+offset, "lines", "red", GPC_NEW);
+	gpc_close(plot);*/
+	
 	return false;
 }
 

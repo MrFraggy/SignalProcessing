@@ -5,18 +5,15 @@
 int main(void)
 {
 	Signal signal;
-	Signal dirac(5);
-	dirac[0] = 1;
 	signal.load("./data/leleccum.txt");
-	tools::interpolation(signal);
-	signal.save("./data/test2");
-	tools::decimation(signal);
-	signal.save("./data/test3");
-	tools::filtrage(signal, dirac);
-
 	tools::haar::analyse(signal);
+	tools::haar::synthese(signal);
 	signal.save("./data/test4");
-	signal.savepng("./data/test.png");
 
+	Signal rampe(256);
+	for(int i = 0; i<rampe.getSize(); ++i)
+		rampe[i] = i;
+	tools::haar::analyse(rampe);
+	rampe.save("./data/test5");
 	return 0;
 }
