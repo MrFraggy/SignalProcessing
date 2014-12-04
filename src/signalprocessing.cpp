@@ -64,25 +64,21 @@ namespace haar
 {
 	void analyse(Signal& x)
 	{
-		std::cout << 1 << std::endl;
 		Signal xb = x;
-		std::cout << 1 << std::endl;
 		Signal xh = x;
-		std::cout << 1 << std::endl;
+
 		Signal _h0(3);
 		_h0[0] = 1/std::sqrt(2);
 		_h0[1] = 1/std::sqrt(2);
 		_h0[2] = 0;
-		std::cout << 1 << std::endl;
+
 		Signal _h1(3);
 		_h1[0] = 1/std::sqrt(2);
 		_h1[1] = -1/std::sqrt(2);
 		_h1[2] = 0;
-		std::cout << 1 << std::endl;
+
 		filtrage(xb, _h0);
-		std::cout << 1 << std::endl;
 		filtrage(xh, _h1);
-		std::cout << 1 << std::endl;
 	}
 }
 }

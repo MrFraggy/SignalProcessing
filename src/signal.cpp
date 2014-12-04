@@ -10,7 +10,7 @@ Signal::Signal(int size, int t) : data(new double[size]), size(size), offset(t)
 	std::memset(data.get(), 0, sizeof(double)*size);
 }
 
-Signal::Signal(const Signal& other) : Signal(size)
+Signal::Signal(const Signal& other) : Signal(other.size)
 {
 	std::memcpy(data.get(), other.data.get(), sizeof(double)*size);
 }
