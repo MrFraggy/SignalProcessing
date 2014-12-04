@@ -15,7 +15,7 @@ OBJ_FILES = $(PATH_OBJ)/main.o \
 			$(PATH_OBJ)/signal.o \
 			$(PATH_OBJ)/signalprocessing.o
 
-GCC_OPTS = -std=c++11 -Wall
+GCC_OPTS = -std=c++11 -Wall -g
 
 .PHONY: all
 
