@@ -8,6 +8,9 @@ class Signal;
 namespace tools {
 namespace haar 
 {
+	/*
+		
+	*/
 	void analyse(Signal& s);
 	void synthese(Signal& s);
 }
