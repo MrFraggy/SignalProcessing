@@ -13,6 +13,8 @@ int main(void)
 	tools::decimation(signal);
 	signal.save("./data/test3");
 	tools::filtrage(signal, dirac);
+
+	tools::haar::analyse(signal);
 	signal.save("./data/test4");
 	signal.savepng("./data/test.png");
 
