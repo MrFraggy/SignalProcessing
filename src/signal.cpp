@@ -1,5 +1,4 @@
 #include "signal.hpp"
-#include "gnuplot_c.h"
 #include <cstring>
 #include <stdexcept>
 #include <fstream>

@@ -32,28 +32,31 @@ Signal& filtrage(Signal& x, const Signal& h)
 {
 	Signal s2(x.getSize(), x.getOffset());
 
-	for(int i = s2.getOffset(); i<s2.getSize()-s2.getOffset(); ++i)
+    for(int i = s2.getOffset(); i < s2.getSize() - s2.getOffset(); ++i)
 	{
 		double sum = 0.0;
-		for(int k = h.getOffset(); k < h.getSize()-h.getOffset(); ++k)
-		{
-			int i2 = i-k;
+        for(int k = h.getOffset(); k < h.getSize() - h.getOffset(); ++k)
+        {
+            int i2 = i - (k - h.getSize()/2); // ! \\ Nous n'avons pas gérer/testé avec les offset !!!!
 			// symétrie mirroir
 			// /!\ ne marche pas si |i2| >= 2*x.getSize();
-			if(i2-x.getOffset() < 0)
-			{
-				i2 = -(i-k-x.getOffset());
+            if(i2 - x.getOffset() < 0)
+            {
+                i2 = - (i2 - x.getOffset());
 			}
-			else if(i2-x.getOffset() >= x.getSize())
-			{
-				i2 = x.getSize() - i2 + x.getOffset();
+            else if(i2 - x.getOffset() >= x.getSize())
+            {
+                i2 = (x.getSize() - 1) - ((i2 - x.getSize()) + 1);
 			}
-			//int i2 = (i-k - x.getOffset())%x.getSize();
-			//i2 = ((i-k-x.getOffset())/x.getSize() % 2) ? x.getSize()-i2 + x.getOffset() : i2 + x.getOffset();
-			sum += h[k]*x[i2];
-			
+
+            try {
+                sum += h[k]*x[i2];
+            } catch(std::exception& e)
+            {
+                std::cout << "out of range in filtrage: " << i << " " << i - k << " " << i2 << std::endl;
+            }
 		}
-		s2[i] = sum;
+        s2[i] = sum;
 	}
 
 	x = s2;
