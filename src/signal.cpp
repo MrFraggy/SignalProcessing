@@ -4,6 +4,38 @@
 #include <fstream>
 #include <vector>
 #include <limits>
+#include <iostream>
+
+class Program {
+public:
+	Program(const std::string& prog) : f(nullptr)
+	{
+		f = popen(prog.c_str(), "w");
+	}
+	~Program()
+	{
+		if(f)
+			fclose(f);
+	}
+	void command(const std::string& str)
+	{
+		std::string cmd = str+"\n";
+		fprintf(f, cmd.c_str());
+	}
+
+	bool isValid()
+	{
+		return f != nullptr;
+	}
+
+	void flush()
+	{
+		fflush(f);
+	}
+protected:
+	FILE* f;
+};
+
 
 Signal::Signal(int size, int t) : data(new double[size]), size(size), offset(t)
 {
@@ -82,11 +114,27 @@ bool Signal::save(const std::string& filename)
 
 bool Signal::savepng(const std::string& filename)
 {
-	/*auto *plot = gpc_init_2d("Signal", "X", "Y", 1.f, GPC_SIGNED, GPC_MULTIPLOT, GPC_KEY_DISABLE);
-	gpc_plot_2d(plot, data.get(), size, "Signal", -offset, size+offset, "lines", "red", GPC_NEW);
-	gpc_close(plot);*/
+	if(!save("./temp-010203.dat"))
+	{
+		std::cerr << "error while saving file" << std::endl;
+		return false;
+	}
+
+	{
+		Program p("gnuplot");
+		if(!p.isValid())
+		{	
+			std::cerr << "program invalid" << std::endl;
+			return false;
+		}
 	
-	return false;
+		p.command("set terminal png");
+		p.command("set output \""+filename+"\"");
+		p.command("plot \"./temp-010203.dat\" with line");
+		p.flush();
+	}
+	system("rm temp-010203.dat");
+	return true;
 }
 
 int Signal::getSize() const
