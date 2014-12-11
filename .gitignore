@@ -33,7 +33,3 @@ bin/*
 *.config
 *.includes
 *.files
-
-data/*
-data/*/*
-!data/leleccum.txt
