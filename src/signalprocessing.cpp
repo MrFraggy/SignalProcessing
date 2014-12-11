@@ -218,7 +218,67 @@ namespace lifting
 {
 	void analyse(Signal& s)
 	{
+		Signal x = s;
+		const double a[5] = { -1.586134342, -0.05298011854, 0.8829110762, 0.4435068522, 1/1.149604398};
+		const int half = s.getSize()/2;
+
+		for(int n = 0; n<half; ++n)
+		{
+			// "Prédiction" 1 : Pour tout n, 
+			// x[2n+1] <- a*x[2n]+x[2n+1]+a*x[2n+2]
+			// avec a=-1.586134342
+			x[2*n+1] = a[0]*s[2*n]+s[2*n+1]+a[0]*s[2*n+2];
+		}
 		
+		for(int n = 0; n<half;++n)
+		{
+			// "Mise à jour" 1 : Pour tout n, 
+			// x[2n] <- a*x[2n-1]+x[2n]+a*x[2n+1]
+			// avec a=-0.05298011854
+			x[2*n] = a[1]*x[2*n-1]+x[2*n]+a[1]*x[2*n+1];
+		}
+
+		for(int n = 0; n<half; ++n)
+		{
+			// "Prédiction" 2 : Pour tout n, 
+			// x[2n+1] <- a*x[2n]+x[2n+1]+a*x[2n+2]
+			// avec a=0.8829110762
+			x[2*n+1] = a[2]*x[2*n]+x[2*n+1]+a[2]*x[2*n+2];
+		}
+		
+		for(int n = 0; n<half; ++n)
+		{	
+			// "Mise à jour" 2 : Pour tout n, 
+			// x[2n] <- a*x[2n-1]+x[2n]+a*x[2n+1]
+			// avec a=0.4435068522
+			x[2*n] = a[3]*x[2*n-1]+x[2*n]+a[3]*x[2*n+1];
+		}
+
+		for(int n = 0; n<half; ++n)
+		{
+			// "Mise à l'échelle" : Pour tout n, 
+			// x[2n] <- x[2n]/a et 
+			// x[2n+1] <- a*x[2n+1]
+			// avec a=1/1.149604398
+			x[2*n] = x[2*n]/a[4];
+			x[2*n+1] = a[4]*x[2*n+1];
+		}
+
+
+		for(int n = 0; n<half; ++n)
+		{
+			// "Mise en forme" : Mettez les valeurs d'index pairs dans la première moitié de x 
+			// et les valeurs d'index impairs dans la seconde moitié. 
+			// (exemple : 01234567 devient 02461357)
+			s[n] = x[2*n];
+			s[n+half] = x[2*n+1];
+		}
+		
+	}
+
+	void synthese(Signal& s)
+	{
+
 	}
 }
 }
