@@ -30,6 +30,8 @@ namespace lifting
 Signal& interpolation(Signal& in);
 Signal& decimation(Signal& in);
 Signal& filtrage(Signal& x, const Signal& h);
+
+double significantError(const Signal& s1, const Signal& s2);
 }
 
 
