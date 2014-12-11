@@ -213,4 +213,12 @@ namespace biortho97
 			x[i] = xb[i]+xh[i];
 	}
 }
+
+namespace lifting
+{
+	void analyse(Signal& s)
+	{
+		
+	}
+}
 }

@@ -21,6 +21,12 @@ namespace biortho97
 	void synthese(Signal& s);
 }
 
+namespace lifting
+{
+	void analyse(Signal& s);
+	void synthese(Signal& s);
+}
+
 Signal& interpolation(Signal& in);
 Signal& decimation(Signal& in);
 Signal& filtrage(Signal& x, const Signal& h);
