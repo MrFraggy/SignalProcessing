@@ -32,25 +32,25 @@ Signal& filtrage(Signal& x, const Signal& h)
 {
 	Signal s2(x.getSize(), x.getOffset());
 
-    for(int i = s2.getOffset(); i < s2.getSize() - s2.getOffset(); ++i)
+    for(int i = 0; i < s2.getSize(); ++i)
 	{
 		double sum = 0.0;
-        for(int k = h.getOffset(); k < h.getSize() - h.getOffset(); ++k)
+        for(int k = -h.getSize()/2; k <= h.getSize()/2; ++k)
         {
-            int i2 = i - (k - h.getSize()/2); // ! \\ Nous n'avons pas gérer/testé avec les offset !!!!
+            int i2 = i - k;//(k - h.getSize()/2); // ! \\ Nous n'avons pas gérer/testé avec les offset !!!!
 			// symétrie mirroir
 			// /!\ ne marche pas si |i2| >= 2*x.getSize();
-            if(i2 - x.getOffset() < 0)
+            if(i2 < 0)
             {
-                i2 = - (i2 - x.getOffset());
+                i2 = - i2;
 			}
-            else if(i2 - x.getOffset() >= x.getSize())
+            else if(i2 >= x.getSize())
             {
-                i2 = (x.getSize() - 1) - ((i2 - x.getSize()) + 1);
+                i2 = 2*x.getSize() - i2 - 2;
 			}
 
             try {
-                sum += h[k]*x[i2];
+                sum += h[k + h.getSize()/2]*x[i2];
             } catch(std::exception& e)
             {
                 std::cout << "out of range in filtrage: " << i << " " << i - k << " " << i2 << std::endl;
@@ -74,7 +74,7 @@ double significantError(const Signal& s1, const Signal& s2)
 
 	for(int i = s1.getOffset(); i<s1.getSize()+s1.getOffset(); ++i)
 	{
-		error += std::abs(s1[i]*s1[i] - s2[i]*s2[i]);
+		error += (s1[i]-s2[i])*(s1[i]-s2[i]);
 	}
 
 	return error;
@@ -249,7 +249,7 @@ namespace lifting
 			// x[2n+1] <- a*x[2n]+x[2n+1]+a*x[2n+2]
 			// avec a=-1.586134342
 			x[2*n+1] = a[0]*s[2*n]+s[2*n+1]+a[0]*s[2*n+2];
-		}
+		} 
 
 		x[0] = a[1]*x[1]+x[0]+a[1]*x[1];
 		for(int n = 1; n<half;++n)
@@ -260,7 +260,7 @@ namespace lifting
 			x[2*n] = a[1]*x[2*n-1]+x[2*n]+a[1]*x[2*n+1];
 		}
 
-		x[2*(half-1)+1] = a[2]*x[2*(half-1)]+x[2*(half-1)+1]+a[2]*x[2*(half-1)];
+		x[2*(half-1)+1] = a[2]*x[2*(half-1)]+x[2*(half-1)+1]+a[2]*x[2*(half-1)+0];
 		for(int n = 0; n<half-1; ++n)
 		{
 			// "Prédiction" 2 : Pour tout n, 
@@ -300,6 +300,9 @@ namespace lifting
 
 	void synthese(Signal& s)
 	{
+		if(s.getSize()%2)
+			throw std::string("Le signal doit être pair");
+
 		Signal x = s;
 		const double a[5] = {1.586134342, 0.05298011854, -0.8829110762, -0.4435068522, 1.149604398};
 		const int half = s.getSize()/2;
@@ -348,16 +351,14 @@ namespace lifting
 			// avec a=0.05298011854
 			x[2*n] = a[1]*x[2*n-1]+x[2*n]+a[1]*x[2*n+1];
 		}
-
-		x[2*(half-1)+1] = a[0]*s[2*(half-1)]+s[2*(half-1)+1]+a[0]*s[2*(half-1)];
+		x[2*(half-1)+1] = a[0]*x[2*(half-1)]+x[2*(half-1)+1]+a[0]*x[2*(half-1)];
 		for(int n = 0; n<half-1; ++n)
 		{
 			// "Prédiction" 1 : Pour tout n, 
 			// x[2n+1] <- a*x[2n]+x[2n+1]+a*x[2n+2]
 			// avec a=1.586134342
-			x[2*n+1] = a[0]*s[2*n]+s[2*n+1]+a[0]*s[2*n+2];
+			x[2*n+1] = a[0]*x[2*n]+x[2*n+1]+a[0]*x[2*n+2];
 		}
-
 		s = x;
 	}
 }

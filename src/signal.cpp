@@ -114,9 +114,11 @@ bool Signal::save(const std::string& filename)
 
 bool Signal::savepng(const std::string& filename)
 {
-	if(!save("./temp-010203.dat"))
+	size_t start = filename.find_last_of("/")+1, stop = filename.find_last_of(".");
+	std::string name = filename.substr(start, stop-start);
+	if(!save(name))
 	{
-		std::cerr << "error while saving file" << std::endl;
+		std::cerr << "error while saving file " << name << std::endl;
 		return false;
 	}
 
@@ -130,10 +132,12 @@ bool Signal::savepng(const std::string& filename)
 	
 		p.command("set terminal png");
 		p.command("set output \""+filename+"\"");
-		p.command("plot \"./temp-010203.dat\" with line");
+		p.command("plot \""+name+"\" with line");
 		p.flush();
 	}
-	system("rm temp-010203.dat");
+	std::string cmd = "rm "+name;
+
+	system(cmd.c_str());
 	return true;
 }
 
