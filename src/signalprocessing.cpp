@@ -30,7 +30,7 @@ Signal& decimation(Signal& in)
 
 Signal& filtrage(Signal& x, const Signal& h)
 {
-	Signal s2(x.getSize(), x.getOffset());
+	Signal s2 = x;
 
     for(int i = 0; i < s2.getSize(); ++i)
 	{
@@ -74,7 +74,8 @@ double significantError(const Signal& s1, const Signal& s2)
 
 	for(int i = s1.getOffset(); i<s1.getSize()+s1.getOffset(); ++i)
 	{
-		error += (s1[i]-s2[i])*(s1[i]-s2[i]);
+		double tmp = (s1[i]-s2[i])*(s1[i]-s2[i]);
+		error += std::isnan(tmp) ? 0 : tmp;
 	}
 
 	return error;
@@ -362,4 +363,18 @@ namespace lifting
 		s = x;
 	}
 }
+
+namespace amr
+{
+	void analyse(Signal& s, int niveau)
+	{
+
+	}
+
+	void synthese(Signal& s, int niveau)
+	{
+
+	}
+}
+
 }

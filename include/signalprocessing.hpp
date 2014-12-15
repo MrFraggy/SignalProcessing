@@ -5,7 +5,8 @@
 
 class Signal;
 
-namespace tools {
+namespace tools 
+{
 namespace haar 
 {
 	/*
@@ -25,6 +26,12 @@ namespace lifting
 {
 	void analyse(Signal& s);
 	void synthese(Signal& s);
+}
+
+namespace amr
+{
+	void analyse(Signal& s, int niveau);
+	void synthese(Signal& s, int niveau);
 }
 
 Signal& interpolation(Signal& in);
