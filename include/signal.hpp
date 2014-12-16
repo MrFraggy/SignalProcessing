@@ -22,6 +22,8 @@ public:
 
 	bool savepng(const std::string& filename);
 
+	void fill(const Signal& other, int start, int size);
+
 	int getSize() const;
 	int getOffset() const;
 

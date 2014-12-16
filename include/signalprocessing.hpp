@@ -32,6 +32,7 @@ namespace amr
 {
 	void analyse(Signal& s, int niveau);
 	void synthese(Signal& s, int niveau);
+	float niveauMaximum(const Signal& s);
 }
 
 Signal& interpolation(Signal& in);

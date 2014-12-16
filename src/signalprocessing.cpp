@@ -1,6 +1,7 @@
 #include "signalprocessing.hpp"
 #include "signal.hpp"
 #include <iostream>
+#include <sstream>
 #include <cmath>
 
 namespace tools
@@ -237,7 +238,12 @@ namespace lifting
 	void analyse(Signal& s)
 	{
 		if(s.getSize()%2)
-			throw std::string("Le signal doit être pair");
+		{
+			std::ostringstream oss;
+			oss << "Le signal doit être pair: ";
+			oss << s.getSize();
+			throw oss.str();
+		}
 
 		Signal x = s;
 		const double a[5] = { -1.586134342, -0.05298011854, 0.8829110762, 0.4435068522, 1/1.149604398};
@@ -302,7 +308,12 @@ namespace lifting
 	void synthese(Signal& s)
 	{
 		if(s.getSize()%2)
-			throw std::string("Le signal doit être pair");
+		{
+			std::ostringstream oss;
+			oss << "Le signal doit être pair: ";
+			oss << s.getSize();
+			throw oss.str();
+		}
 
 		Signal x = s;
 		const double a[5] = {1.586134342, 0.05298011854, -0.8829110762, -0.4435068522, 1.149604398};
@@ -368,12 +379,46 @@ namespace amr
 {
 	void analyse(Signal& s, int niveau)
 	{
+		if(niveau <= 0 || s.getSize() <= 1)	return;
 
+		lifting::analyse(s);
+
+		Signal tmp(s.getSize()/2);
+
+		tmp.fill(s, 0, s.getSize()/2);
+
+		analyse(tmp, niveau-1);
+
+		s.fill(tmp, 0, tmp.getSize());
+	}
+
+	void syntheseRecurs(Signal& s, int niveau, int size)
+	{
+		size /= 2;
+//		size = N/(2^(niveaumax - niveau))
+		if(niveau <= 0 || size <= 0) return;
+
+		syntheseRecurs(s, niveau-1, size);
+		size *= 2;
+		std::cout << size << " " << niveau << " " << niveauMaximum(s) << std::endl;
+		
+		Signal tmp(size);
+
+		tmp.fill(s, 0, size);
+
+		lifting::synthese(tmp);
+
+		s.fill(tmp, 0, tmp.getSize());
 	}
 
 	void synthese(Signal& s, int niveau)
 	{
+		syntheseRecurs(s, niveau, s.getSize());
+	}
 
+	float niveauMaximum(const Signal& s)
+	{
+		return std::log2(static_cast<float>(s.getSize()));
 	}
 }
 

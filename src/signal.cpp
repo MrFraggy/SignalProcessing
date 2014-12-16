@@ -141,6 +141,11 @@ bool Signal::savepng(const std::string& filename)
 	return true;
 }
 
+void Signal::fill(const Signal& other, int start, int size)
+{
+	std::memcpy(data.get() + start, other.data.get() + start, sizeof(double)*size);
+}
+
 int Signal::getSize() const
 {
 	return size;
