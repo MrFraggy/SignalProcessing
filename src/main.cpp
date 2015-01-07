@@ -87,7 +87,7 @@ int main(void)
 	//////////////////////////////////////////////
 	Signal2D lena2D;
 	lena2D.load("./data/lena.bmp");
-	lena2D.save("./data/lenaBmp/test.bmp");
+	
 	Signal lena512 = lena2D.getLine(255);
 	//lena512.load("./data/lena.txt");
 	Signal lena512origine = lena512;
@@ -113,7 +113,7 @@ int main(void)
 	// AMR
 	try{
 
-		Signal lena512_1 = lena512;
+		/*Signal lena512_1 = lena512;
 		tools::amr::analyse(lena512_1, 1);
 		tools::minMaxAverage(lena512_1, 1);
 		tools::amr::synthese(lena512_1, 1);
@@ -130,10 +130,19 @@ int main(void)
 		tools::amr::synthese(lena512_4, 4);
 
 		std::cout << tools::significantError(lena512_4, lena512origine) << std::endl;
+	*/
+		/*tools::biortho97::analyse(lena2D);
+
+		lena2D.save("./data/lenaBmp/test.bmp");
+		Signal2D tmp = lena2D.subSignal(0,0,256);*/
+		tools::amr::analyse(lena2D, 2);
+		lena2D.save("./data/lenaBmp/test.bmp");
 	} catch(const std::string& s)
 	{
 		std::cerr << "EXCEPTION: " << s << std::endl;
 	}
+
+
 
 	/* 
 		Q: Niveau maximal de décompositions pour un signal de taille p?

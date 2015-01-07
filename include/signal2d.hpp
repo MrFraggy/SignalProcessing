@@ -22,9 +22,7 @@ public:
 	bool load(const std::string& filename);
 	bool save(const std::string& filename);
 
-	bool savepng(const std::string& filename);
-
-	void fill(const Signal2D& other, int start, int size);
+	void fill(const Signal2D& s, int x, int y, int length);
 
 	void setLine(const Signal& s, int line);
 	void setColumn(const Signal& s, int col);
@@ -33,6 +31,8 @@ public:
 	Signal getColumn(int c);
 
 	int getSize() const;
+
+	Signal2D subSignal(int x, int y, int length);
 
 protected:
 	std::unique_ptr<double> data;

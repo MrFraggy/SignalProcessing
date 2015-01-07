@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstring>
 #include <string>
+#include <iostream>
 
 Signal2D::Signal2D(int size) : 
 	data(new double[size*size]), size(size) 
@@ -46,6 +47,19 @@ bool Signal2D::save(const std::string& filename)
 	return ecrit_bmp256(filename.c_str(), size, size, data.get()) == 1;
 }
 
+void Signal2D::fill(const Signal2D& s, int x, int y, int length)
+{
+	for(int i = 0; i<length; ++i)
+	{
+		for(int j = 0; j<length; ++j)
+		{
+			int px = i+x, py = j+y;
+			data.get()[py*size+px] = s[py*length+px];
+		}
+	}
+}
+
+
 void Signal2D::setLine(const Signal& s, int line)
 {
 	for(int i = 0; i<size; ++i)
@@ -77,4 +91,17 @@ Signal Signal2D::getColumn(int col)
 int Signal2D::getSize() const 
 {
 	return size;
+}
+
+Signal2D Signal2D::subSignal(int x, int y, int length)
+{
+	Signal2D s(length);
+	for(int i = 0; i<length; ++i)
+		for(int j = 0; j<length; ++j)
+		{
+			int px = i+x, py = j+y;
+			s[py*length+px] = data.get()[py*size+px];
+		}
+	
+	return s;
 }

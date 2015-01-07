@@ -1,5 +1,6 @@
 #include "signalprocessing.hpp"
 #include "signal.hpp"
+#include "signal2d.hpp"
 #include <iostream>
 #include <sstream>
 #include <cmath>
@@ -272,6 +273,24 @@ namespace biortho97
 		for(int i = 0; i<x.getSize(); ++i)
 			x[i] = xb[i]+xh[i];
 	}
+
+	void analyse(Signal2D& s) {
+		for(int i = 0; i<s.getSize(); ++i) {
+			Signal l = s.getLine(i);
+			analyse(l);
+			s.setLine(l, i);
+		}
+
+		for(int i = 0; i<s.getSize(); ++i) {
+			Signal l = s.getColumn(i);
+			analyse(l);
+			s.setColumn(l, i);
+		}
+	}
+
+	void synthese(Signal2D& s) {
+
+	}
 }
 
 namespace lifting
@@ -454,6 +473,23 @@ namespace amr
 	void synthese(Signal& s, int niveau)
 	{
 		syntheseRecurs(s, niveau, s.getSize());
+	}
+
+
+
+	void analyse(Signal2D& s, int niveau) {
+		std::cout << "analyse" << std::endl;
+		if(niveau <= 0 || s.getSize() <= 1)	{
+			std::cout << "exit" << std::endl;
+			return;
+		}
+		biortho97::analyse(s);
+
+		Signal2D tmp(s.subSignal(0,0,s.getSize()/2));
+
+		analyse(tmp, niveau-1);
+
+		s.fill(tmp, 0, 0, tmp.getSize());
 	}
 
 	float niveauMaximum(const Signal& s)

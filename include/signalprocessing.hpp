@@ -4,6 +4,7 @@
 #define C_SIGNALPROCESSINH_HPP
 
 class Signal;
+class Signal2D;
 
 namespace tools 
 {
@@ -20,6 +21,9 @@ namespace biortho97
 {
 	void analyse(Signal& s);
 	void synthese(Signal& s);
+
+	void analyse(Signal2D& s);
+	void synthese(Signal2D& s);
 }
 
 namespace lifting
@@ -33,6 +37,10 @@ namespace amr
 	void analyse(Signal& s, int niveau);
 	void synthese(Signal& s, int niveau);
 	float niveauMaximum(const Signal& s);
+
+
+	void analyse(Signal2D& s, int niveau);
+	void synthese(Signal2D& s, int niveau);
 }
 
 Signal& interpolation(Signal& in);
