@@ -1,5 +1,6 @@
 #include <iostream>
 #include "signal.hpp"
+#include "signal2d.hpp"
 #include "signalprocessing.hpp"
 #include "bmp.hpp"
 
@@ -84,40 +85,74 @@ int main(void)
 	//////////////////////////////////////////////
 	/// LENA SIGNAL
 	//////////////////////////////////////////////
-
-	Signal lena512;
-	lena512.load("./data/lena.txt");
-
-	tools::haar::analyse(lena512);
-	lena512.savepng("./data/lena512/haaranalyse.png");
-	tools::haar::synthese(lena512);
-	lena512.savepng("./data/lena512/haar.png");
-	tools::biortho97::analyse(lena512);
-	lena512.savepng("./data/lena512/biortho97analyse.png");
-	tools::biortho97::synthese(lena512);
-	lena512.savepng("./data/lena512/biortho97.png");
-	tools::lifting::analyse(lena512);
-	lena512.savepng("./data/lena512/liftinganalyse.png");
-	tools::lifting::synthese(lena512);
-	lena512.savepng("./data/lena512/lifting.png");
+	Signal2D lena2D;
+	lena2D.load("./data/lena.bmp");
+	lena2D.save("./data/lenaBmp/test.bmp");
+	Signal lena512 = lena2D.getLine(255);
+	//lena512.load("./data/lena.txt");
+	Signal lena512origine = lena512;
+	// tools::haar::analyse(lena512);
+	// lena512.savepng("./data/lena512/haaranalyse.png");
+	// tools::haar::synthese(lena512);
+	// lena512.savepng("./data/lena512/haar.png");
+	// tools::biortho97::analyse(lena512);
+	// lena512.savepng("./data/lena512/biortho97analyse.png");
+	// tools::biortho97::synthese(lena512);
+	// lena512.savepng("./data/lena512/biortho97.png");
+	// tools::lifting::analyse(lena512);
+	// lena512.savepng("./data/lena512/liftinganalyse.png");
+	// tools::lifting::synthese(lena512);
+	// lena512.savepng("./data/lena512/lifting.png");
 
 	/*
 		Q : Tracez et commentez les courbes des coefficients.
 		Décrivez les interêts du "lifting".
-
-		R : même resultat mais plus facile à réutiliser/implementer?
+		R : Même resultat mais plus facile à réutiliser/implementer?
 	*/
 
 	// AMR
 	try{
-		tools::amr::analyse(lena512, 1);
-		lena512.savepng("./data/lena512/amranalyse.png");
-		tools::amr::synthese(lena512, 1);
-		lena512.savepng("./data/lena512/amr.png");
+
+		Signal lena512_1 = lena512;
+		tools::amr::analyse(lena512_1, 1);
+		tools::minMaxAverage(lena512_1, 1);
+		tools::amr::synthese(lena512_1, 1);
+
+		Signal lena512_2 = lena512;
+		tools::amr::analyse(lena512_2, 2);
+		tools::minMaxAverage(lena512_2, 2);
+		tools::amr::synthese(lena512_2, 2);
+
+		Signal lena512_4 = lena512;
+		tools::amr::analyse(lena512_4, 4);
+		tools::minMaxAverage(lena512_4, 4);
+		lena512_4.savepng("./data/lena512/liftinganalyse_4.png");
+		tools::amr::synthese(lena512_4, 4);
+
+		std::cout << tools::significantError(lena512_4, lena512origine) << std::endl;
 	} catch(const std::string& s)
 	{
 		std::cerr << "EXCEPTION: " << s << std::endl;
 	}
+
+	/* 
+		Q: Niveau maximal de décompositions pour un signal de taille p?
+		R: log2(p)
+	
+		Q: Montrer de manière objective que le signal reconstruit est identique
+		au signal d'origine.
+		R: Calcul de l'erreur significative pour les deux signaux.
+
+		Q: Si l'on réalise une amr de niveau j combien de sous bande obtient-on ?
+		R: j + 1 avec j sous bande de détails et une sous bande d'approximation.
+
+			A 		 D2			D1
+		|--------|--------|----------------|	
+	*/
+
+	
+
+
 	//////////////////////////////////////////////
 	/// LENA BMP
 	//////////////////////////////////////////////

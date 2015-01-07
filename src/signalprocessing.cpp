@@ -82,6 +82,47 @@ double significantError(const Signal& s1, const Signal& s2)
 	return error;
 }
 
+void minMaxAverage(const Signal& s1, unsigned int level)
+{
+	uint size = s1.getSize();
+
+	int pos = 0;
+	double min = s1[0], max = s1[0], average = 0;
+
+	//coeff d'approx
+	int tmpSize =(size / std::pow(2, level));
+	for(int i = 0; i < tmpSize; ++i)
+	{
+		min = std::min(min, s1[pos]);
+		max = std::max(max, s1[pos]);
+
+		average += s1[pos];
+
+		++pos;
+	}
+
+	average /= tmpSize;
+	std::cout << "Approx (length: " << tmpSize << ") Min: " << min << " Max: " << max << " Avg: " << average << std::endl;
+
+	// coef de details
+	for(int i = level; i > 0; --i)
+	{
+		tmpSize = (size / std::pow(2, i));
+		min = s1[pos]; max = s1[pos]; average = 0;
+		for(int j = 0; j < tmpSize; ++j)
+		{
+			min = std::min(min, s1[pos]);
+			max = std::max(max, s1[pos]);
+
+			average += s1[pos];
+
+			++pos;
+		}
+		average /= tmpSize;
+		std::cout << "Detail " << level-i << " (length: " << tmpSize << ") Min: " << min << " Max: " << max << " Avg: " << average << std::endl;
+	}
+}
+
 namespace haar
 {
 	void analyse(Signal& x)
@@ -400,7 +441,6 @@ namespace amr
 
 		syntheseRecurs(s, niveau-1, size);
 		size *= 2;
-		std::cout << size << " " << niveau << " " << niveauMaximum(s) << std::endl;
 		
 		Signal tmp(size);
 

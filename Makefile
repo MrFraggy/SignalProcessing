@@ -13,6 +13,7 @@ PATH_LIBRARIES =
 #lister les fichiers à compiler
 OBJ_FILES = $(PATH_OBJ)/main.o \
 			$(PATH_OBJ)/signal.o \
+			$(PATH_OBJ)/signal2d.o \
 			$(PATH_OBJ)/signalprocessing.o \
 			$(PATH_OBJ)/bmp.o
 

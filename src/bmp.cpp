@@ -1,11 +1,10 @@
 extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
-#include <inttypes.h>
 
 #include "bmp.hpp"
 
-double* charge_bmp256(char* fichier, uint32_t* largeur, uint32_t* hauteur) {
+double* charge_bmp256(const char* fichier, uint32_t* largeur, uint32_t* hauteur) {
 	FILE* fp;
 	uint16_t bfType;
 	uint32_t bfOffBits;
@@ -69,26 +68,26 @@ double* charge_bmp256(char* fichier, uint32_t* largeur, uint32_t* hauteur) {
 
 	// Allocation d'un bloc memoire pour lire les pixels et lecture de ceux-ci
 	pixelsSize = (*largeur) * (*hauteur);
-	pixels = (uint8_t *) malloc(pixelsSize);
+	pixels = new uint8_t[pixelsSize];
 	fseek(fp, bfOffBits, SEEK_SET);
 	fread(pixels, pixelsSize, 1, fp);
 
 	// Copie dans un buffer de double et transposition des lignes
-	m = (double *) calloc(pixelsSize, sizeof(double));
+	m = new double[pixelsSize];
 	for (y = 0; y < *hauteur; y++) {
 		for (x = 0; x < *largeur; x++) {
 			m[x + *largeur * (*hauteur - 1 - y)] = (double) pixels[x + *largeur
 					* y];
 		}
 	}
-	free(pixels);
+	delete pixels;
 
 	fclose(fp);
 
 	return m;
 }
 
-int ecrit_bmp256(char* fichier, uint32_t largeur, uint32_t hauteur, double* m) {
+int ecrit_bmp256(const char* fichier, uint32_t largeur, uint32_t hauteur, double* m) {
 	FILE* fp;
 	uint16_t us;
 	uint32_t ul;
@@ -108,7 +107,7 @@ int ecrit_bmp256(char* fichier, uint32_t largeur, uint32_t hauteur, double* m) {
 	pixelsSize = largeur * hauteur;
 
 	// Conversion double => uint8_t
-	pixels = (uint8_t *) malloc(pixelsSize);
+	pixels = new uint8_t[pixelsSize];
 	for (y = 0; y < hauteur; y++) {
 		for (x = 0; x < largeur; x++) {
 			double d;
@@ -206,7 +205,7 @@ int ecrit_bmp256(char* fichier, uint32_t largeur, uint32_t hauteur, double* m) {
 	// Ecriture de l'image
 	fwrite(pixels, largeur * hauteur, 1, fp);
 
-	free(pixels);
+	delete pixels;
 
 	fclose(fp);
 	return 1;
