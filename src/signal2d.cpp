@@ -54,7 +54,7 @@ void Signal2D::fill(const Signal2D& s, int x, int y, int length)
 		for(int j = 0; j<length; ++j)
 		{
 			int px = i+x, py = j+y;
-			data.get()[py*size+px] = s[py*length+px];
+			data.get()[py*size+px] = s[i*length+j];
 		}
 	}
 }
@@ -100,7 +100,7 @@ Signal2D Signal2D::subSignal(int x, int y, int length)
 		for(int j = 0; j<length; ++j)
 		{
 			int px = i+x, py = j+y;
-			s[py*length+px] = data.get()[py*size+px];
+			s[i*length+j] = data.get()[py*size+px];
 		}
 	
 	return s;

@@ -25,7 +25,7 @@ int main(void)
 	/// LELECUM
 	//////////////////////////////////////////////
 
-	Signal signal;
+	/*Signal signal;
 	signal.load("./data/leleccum.txt");
 
 	tools::haar::analyse(signal);
@@ -35,7 +35,7 @@ int main(void)
 	tools::biortho97::analyse(signal);
 	signal.savepng("./data/leleccum/biortho97analyse.png");
 	tools::biortho97::synthese(signal);
-	signal.savepng("./data/leleccum/biortho97.png");
+	signal.savepng("./data/leleccum/biortho97.png");*/
 
 	/*
 	Signal signalHaar = signal;
@@ -68,7 +68,7 @@ int main(void)
 	//////////////////////////////////////////////
 	/// RAMPE
 	//////////////////////////////////////////////
-
+/*
 	Signal rampe(256);
 	for(int i = 0; i<rampe.getSize(); ++i)
 		rampe[i] = i;
@@ -80,7 +80,7 @@ int main(void)
 	tools::biortho97::analyse(rampe);
 	rampe.savepng("./data/rampe/biortho97analyse.png");
 	tools::biortho97::synthese(rampe);
-	rampe.savepng("./data/rampe/biortho97.png");
+	rampe.savepng("./data/rampe/biortho97.png");*/
 
 	//////////////////////////////////////////////
 	/// LENA SIGNAL
@@ -135,8 +135,10 @@ int main(void)
 
 		lena2D.save("./data/lenaBmp/test.bmp");
 		Signal2D tmp = lena2D.subSignal(0,0,256);*/
-		tools::amr::analyse(lena2D, 2);
+		tools::amr::analyse(lena2D, 3);
 		lena2D.save("./data/lenaBmp/test.bmp");
+		tools::amr::synthese(lena2D, 3);
+		lena2D.save("./data/lenaBmp/test2.bmp");
 	} catch(const std::string& s)
 	{
 		std::cerr << "EXCEPTION: " << s << std::endl;

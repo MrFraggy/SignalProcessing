@@ -5,6 +5,9 @@
 #include <sstream>
 #include <cmath>
 
+#define EPSILON 0.00001
+inline bool FEQUALS(double x, double y) { return std::fabs(x-y) < EPSILON; }
+
 namespace tools
 {
 
@@ -289,7 +292,17 @@ namespace biortho97
 	}
 
 	void synthese(Signal2D& s) {
+		for(int i = 0; i<s.getSize(); ++i) {
+			Signal l = s.getColumn(i);
+			synthese(l);
+			s.setColumn(l, i);
+		}
 
+		for(int i = 0; i<s.getSize(); ++i) {
+			Signal l = s.getLine(i);
+			synthese(l);
+			s.setLine(l, i);
+		}
 	}
 }
 
@@ -433,6 +446,20 @@ namespace lifting
 		}
 		s = x;
 	}
+
+	void analyse(Signal2D& s) {
+		for(int i = 0; i<s.getSize(); ++i) {
+			Signal l = s.getLine(i);
+			analyse(l);
+			s.setLine(l, i);
+		}
+
+		for(int i = 0; i<s.getSize(); ++i) {
+			Signal l = s.getColumn(i);
+			analyse(l);
+			s.setColumn(l, i);
+		}
+	}
 }
 
 namespace amr
@@ -478,18 +505,64 @@ namespace amr
 
 
 	void analyse(Signal2D& s, int niveau) {
-		std::cout << "analyse" << std::endl;
-		if(niveau <= 0 || s.getSize() <= 1)	{
-			std::cout << "exit" << std::endl;
+		if(niveau <= 0 || s.getSize() <= 1)
 			return;
-		}
+		
+		auto tmpSize = s.getSize()/2;
 		biortho97::analyse(s);
 
-		Signal2D tmp(s.subSignal(0,0,s.getSize()/2));
+		Signal2D tmp(s.subSignal(0,0,tmpSize));
+		linearize(tmp);
 
 		analyse(tmp, niveau-1);
+		/*for(int x = 0; x<size; ++x)
+		{
+			for(int y = 0; y<size; ++y)
+			{
+				if(x < size/2 && y < size/2)
+					continue;
+				tmp[x*size+y] += 127;
+			}
+		}*/
+		Signal2D dl(s.subSignal(tmpSize, 0, tmpSize));
+		Signal2D dc(s.subSignal(0, tmpSize, tmpSize));
+		Signal2D dd(s.subSignal(tmpSize, tmpSize, tmpSize));
+		addValue(dl, 127); addValue(dc,127); addValue(dd,127);
 
 		s.fill(tmp, 0, 0, tmp.getSize());
+		s.fill(dl, tmpSize, 0, tmpSize);
+		s.fill(dc, 0, tmpSize, tmpSize);
+		s.fill(dd, tmpSize, tmpSize, tmpSize);
+	}
+
+	void synthese2DRecurs(Signal2D& s, int niveau, int size)
+	{
+		size /= 2;
+//		size = N/(2^(niveaumax - niveau))
+		if(niveau <= 0 || size <= 0) return;
+
+		synthese2DRecurs(s, niveau-1, size);
+		size *= 2;
+		
+		Signal2D tmp = s.subSignal(0,0,size);
+		/*for(int x = 0; x<size; ++x)
+		{
+			for(int y = 0; y<size; ++y)
+			{
+				if(x < size/2 && y < size/2)
+					continue;
+				tmp[x*size+y] -= 127;
+			}
+		}*/
+
+		biortho97::synthese(tmp);
+		
+		s.fill(tmp, 0, 0, size);
+	}
+
+	void synthese(Signal2D& s, int niveau)
+	{
+		synthese2DRecurs(s, niveau, s.getSize());
 	}
 
 	float niveauMaximum(const Signal& s)
@@ -498,4 +571,31 @@ namespace amr
 	}
 }
 
+	void addValue(Signal2D& s, double d)
+	{
+		int size = s.getSize();
+		for(int i = 0; i<size*size; ++i)
+		{
+			//if(/*FEQUALS(s[i], 255) || FEQUALS(s[i], 0))
+			//	continue;
+			s[i] += d;
+		}
+	}
+
+	void linearize(Signal2D& s)
+	{
+		uint size = s.getSize();
+		std::cout << "linearize " << size << std::endl;
+		double min = s[0], max = s[0];
+
+		for(int i = 0; i < size*size; ++i)
+		{
+			min = std::min(min, s[i]);
+			max = std::max(max, s[i]);
+		}
+		for(int i = 0; i < size*size; ++i)
+		{
+			s[i] = (s[i]-min)/(max-min) * 255;
+		}
+	}
 }

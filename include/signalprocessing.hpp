@@ -30,6 +30,9 @@ namespace lifting
 {
 	void analyse(Signal& s);
 	void synthese(Signal& s);
+
+	void analyse(Signal2D& s);
+	void synthese(Signal2D& s);
 }
 
 namespace amr
@@ -46,6 +49,9 @@ namespace amr
 Signal& interpolation(Signal& in);
 Signal& decimation(Signal& in);
 Signal& filtrage(Signal& x, const Signal& h);
+
+void addValue(Signal2D& s, double d);
+void linearize(Signal2D& s);
 
 double significantError(const Signal& s1, const Signal& s2);
 void minMaxAverage(const Signal& s1, unsigned int level);

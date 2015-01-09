@@ -1,8 +1,36 @@
-extern "C" {
-#include <stdio.h>
-#include <stdlib.h>
-
+#include <cstdio>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
 #include "bmp.hpp"
+
+#define BITMAP_MAGIC_NUMBER 19778
+
+
+// http://www.cplusplus.com/forum/general/74215/
+// http://stackoverflow.com/questions/8836017/reading-a-bmp-file-in-c
+#pragma pack(2) // Add this
+
+struct BitmapHeader {
+	uint16_t id;
+	uint32_t fileSize;
+	uint16_t reserved1, reserved2;
+	uint32_t offset;
+};
+
+#pragma pack()
+
+struct BitmapInfoHeader {
+	uint32_t headerSize;
+	uint32_t width, height;
+	uint16_t planes, bits;
+	uint32_t compressed;
+	uint32_t imageSize;			
+	int32_t  Xdpi;				/* Horizontal pixels per meter */
+	int32_t  Ydpi;				/* Vertical pixels per meter */
+    uint32_t colors;        	/* Number of colors used */
+    uint32_t importantColors;   /* Number of important colors */	
+};
 
 double* charge_bmp256(const char* fichier, uint32_t* largeur, uint32_t* hauteur) {
 	FILE* fp;
@@ -85,6 +113,23 @@ double* charge_bmp256(const char* fichier, uint32_t* largeur, uint32_t* hauteur)
 	fclose(fp);
 
 	return m;
+	/*std::ifstream image(fichier, std::ios::binary);
+	if(!image || !image.is_open())
+	{
+		std::cerr << "Impossible d'ouvrir l'image " << fichier << std::endl;
+		return nullptr;
+	}
+	BitmapHeader header = {0};
+	image.read((char*)&header,sizeof(BitmapHeader));
+	std::cout 	<< header.id << " " 
+				<< header.fileSize << " "
+				<< std::endl;
+	BitmapInfoHeader infos = {0};
+	image.read((char*)&infos, sizeof(BitmapInfoHeader));
+	std::cout << infos.width << " " << infos.height << std::endl;
+	throw 1;
+
+	return nullptr;*/
 }
 
 int ecrit_bmp256(const char* fichier, uint32_t largeur, uint32_t hauteur, double* m) {
@@ -209,5 +254,4 @@ int ecrit_bmp256(const char* fichier, uint32_t largeur, uint32_t hauteur, double
 
 	fclose(fp);
 	return 1;
-}
 }
