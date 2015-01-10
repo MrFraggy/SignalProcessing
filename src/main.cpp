@@ -157,8 +157,6 @@ int main(void)
 		std::cerr << "EXCEPTION: " << s << std::endl;
 	}
 
-
-
 	/* 
 		Q: Niveau maximal de décompositions pour un signal de taille p?
 		R: log2(p)
@@ -169,6 +167,34 @@ int main(void)
 
 		Q: Si l'on réalise une amr de niveau j combien de sous bande obtient-on ?
 		R: j + 1 avec j sous bande de détails et une sous bande d'approximation.
+
+		Q: Calculez les valeurs moyennes et les variances de chaque sous-bande obtenues par l'AMR 2D de la question précédente.
+		Commentez ces valeurs. 
+		R:
+		Analyse 64: 
+			Moyenne dl : 126.69
+			Variance dl : 32.3168
+			Moyenne dc : 127.483
+			Variance dc : 14.8526
+			Moyenne dd : 127.146
+			Variance dd : 4.1833
+
+		Analyse 128: 
+			Moyenne dl : 126.95
+			Variance dl : 0.488768
+			Moyenne dc : 126.888
+			Variance dc : 19.6341
+			Moyenne dd : 127.048
+			Variance dd : 0.125768
+
+		Analyse 256: 
+			Moyenne dl : 126.786
+			Variance dl : 3.36558
+			Moyenne dc : 127.111
+			Variance dc : 17.0578
+			Moyenne dd : 127.012
+			Variance dd : 1.61692
+
 
 			A 		 D2			D1
 		|--------|--------|----------------|	

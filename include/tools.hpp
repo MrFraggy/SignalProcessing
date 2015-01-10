@@ -23,6 +23,8 @@ namespace tools
 	double average(const Signal2D& s);
 	double variance(const Signal2D& s);
 
+	double debit(const double globalDebit, const double var);
+
 	double significantError(const Signal& s1, const Signal& s2);
 
 	void minMaxAverage(const Signal& s1, unsigned int level);

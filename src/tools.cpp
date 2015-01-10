@@ -144,6 +144,11 @@ double variance(const Signal2D& s)
 	return variance / (size * size - 1);
 }
 
+double debit(const double globalDebit, const double var)
+{
+	return NULL;
+}
+
 void minMaxAverage(const Signal& s1, unsigned int level)
 {
 	uint size = s1.getSize();
