@@ -14,7 +14,11 @@ PATH_LIBRARIES =
 OBJ_FILES = $(PATH_OBJ)/main.o \
 			$(PATH_OBJ)/signal.o \
 			$(PATH_OBJ)/signal2d.o \
-			$(PATH_OBJ)/signalprocessing.o \
+			$(PATH_OBJ)/tools.o \
+			$(PATH_OBJ)/amr.o \
+			$(PATH_OBJ)/lifting.o \
+			$(PATH_OBJ)/biortho97.o \
+			$(PATH_OBJ)/haar.o \
 			$(PATH_OBJ)/bmp.o
 
 GCC_OPTS = -std=c++11 -Wall -g

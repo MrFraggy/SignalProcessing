@@ -1,7 +1,11 @@
 #include <iostream>
 #include "signal.hpp"
 #include "signal2d.hpp"
-#include "signalprocessing.hpp"
+#include "tools.hpp"
+#include "amr.hpp"
+#include "haar.hpp"
+#include "biortho97.hpp"
+#include "lifting.hpp"
 #include "bmp.hpp"
 
 int main(void)
@@ -28,13 +32,13 @@ int main(void)
 	/*Signal signal;
 	signal.load("./data/leleccum.txt");
 
-	tools::haar::analyse(signal);
+	haar::analyse(signal);
 	signal.savepng("./data/leleccum/haaranalyse.png");
-	tools::haar::synthese(signal);
+	haar::synthese(signal);
 	signal.savepng("./data/leleccum/haar.png");
-	tools::biortho97::analyse(signal);
+	biortho97::analyse(signal);
 	signal.savepng("./data/leleccum/biortho97analyse.png");
-	tools::biortho97::synthese(signal);
+	biortho97::synthese(signal);
 	signal.savepng("./data/leleccum/biortho97.png");*/
 
 	/*
@@ -42,14 +46,14 @@ int main(void)
 	Signal signalLift = signal;
 	Signal signalBiortho = signal;
 	Signal signalAMR = signal;
-	tools::lifting::analyse(signalLift);
-	tools::lifting::synthese(signalLift);
-	tools::haar::analyse(signalHaar);
-	tools::haar::synthese(signalHaar);
-	tools::biortho97::analyse(signalBiortho);
-	tools::biortho97::synthese(signalBiortho);
-	tools::amr::analyse(signalBiortho, 1);
-	tools::amr::synthese(signalBiortho, 1);
+	lifting::analyse(signalLift);
+	lifting::synthese(signalLift);
+	haar::analyse(signalHaar);
+	haar::synthese(signalHaar);
+	biortho97::analyse(signalBiortho);
+	biortho97::synthese(signalBiortho);
+	amr::analyse(signalBiortho, 1);
+	amr::synthese(signalBiortho, 1);
 	signalLift.savepng("./data/test.png");
 	signalLift.save("./data/test1.dat");
 	signalBiortho.savepng("./data/test2.png");
@@ -73,13 +77,13 @@ int main(void)
 	for(int i = 0; i<rampe.getSize(); ++i)
 		rampe[i] = i;
 
-	tools::haar::analyse(rampe);
+	haar::analyse(rampe);
 	rampe.savepng("./data/rampe/haaranalyse.png");
-	tools::haar::synthese(rampe);
+	haar::synthese(rampe);
 	rampe.savepng("./data/rampe/haar.png");
-	tools::biortho97::analyse(rampe);
+	biortho97::analyse(rampe);
 	rampe.savepng("./data/rampe/biortho97analyse.png");
-	tools::biortho97::synthese(rampe);
+	biortho97::synthese(rampe);
 	rampe.savepng("./data/rampe/biortho97.png");*/
 
 	//////////////////////////////////////////////
@@ -92,17 +96,17 @@ int main(void)
 
 	//lena512.load("./data/lena.txt");
 	
-	// tools::haar::analyse(lena512);
+	// haar::analyse(lena512);
 	// lena512.savepng("./data/lena512/haaranalyse.png");
-	// tools::haar::synthese(lena512);
+	// haar::synthese(lena512);
 	// lena512.savepng("./data/lena512/haar.png");
-	// tools::biortho97::analyse(lena512);
+	// biortho97::analyse(lena512);
 	// lena512.savepng("./data/lena512/biortho97analyse.png");
-	// tools::biortho97::synthese(lena512);
+	// biortho97::synthese(lena512);
 	// lena512.savepng("./data/lena512/biortho97.png");
-	// tools::lifting::analyse(lena512);
+	// lifting::analyse(lena512);
 	// lena512.savepng("./data/lena512/liftinganalyse.png");
-	// tools::lifting::synthese(lena512);
+	// lifting::synthese(lena512);
 	// lena512.savepng("./data/lena512/lifting.png");
 
 	/*
@@ -115,30 +119,30 @@ int main(void)
 	try{
 
 		/*Signal lena512_1 = lena512;
-		tools::amr::analyse(lena512_1, 1);
+		amr::analyse(lena512_1, 1);
 		tools::minMaxAverage(lena512_1, 1);
-		tools::amr::synthese(lena512_1, 1);
+		amr::synthese(lena512_1, 1);
 
 		Signal lena512_2 = lena512;
-		tools::amr::analyse(lena512_2, 2);
+		amr::analyse(lena512_2, 2);
 		tools::minMaxAverage(lena512_2, 2);
-		tools::amr::synthese(lena512_2, 2);
+		amr::synthese(lena512_2, 2);
 
 		Signal lena512_4 = lena512;
-		tools::amr::analyse(lena512_4, 4);
+		amr::analyse(lena512_4, 4);
 		tools::minMaxAverage(lena512_4, 4);
 		lena512_4.savepng("./data/lena512/liftinganalyse_4.png");
-		tools::amr::synthese(lena512_4, 4);
+		amr::synthese(lena512_4, 4);
 
 		std::cout << tools::significantError(lena512_4, lena512origine) << std::endl;
 	*/
-		/*tools::biortho97::analyse(lena2D);
+		/*biortho97::analyse(lena2D);
 
 		lena2D.save("./data/lenaBmp/test.bmp");
 		Signal2D tmp = lena2D.subSignal(0,0,256);*/
-		tools::amr::analyse(lena2D, 3);
+		amr::analyse(lena2D, 3);
 		lena2D.save("./data/lenaBmp/test.bmp");
-		tools::amr::synthese(lena2D, 3);
+		amr::synthese(lena2D, 3);
 		lena2D.save("./data/lenaBmp/test2.bmp");
 
 		Signal lena512_last = lena2D.getLine(255);
