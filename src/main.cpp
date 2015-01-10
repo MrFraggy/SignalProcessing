@@ -89,8 +89,9 @@ int main(void)
 	lena2D.load("./data/lena.bmp");
 	
 	Signal lena512 = lena2D.getLine(255);
+
 	//lena512.load("./data/lena.txt");
-	Signal lena512origine = lena512;
+	
 	// tools::haar::analyse(lena512);
 	// lena512.savepng("./data/lena512/haaranalyse.png");
 	// tools::haar::synthese(lena512);
@@ -139,6 +140,10 @@ int main(void)
 		lena2D.save("./data/lenaBmp/test.bmp");
 		tools::amr::synthese(lena2D, 3);
 		lena2D.save("./data/lenaBmp/test2.bmp");
+
+		Signal lena512_last = lena2D.getLine(255);
+
+		std::cout << tools::significantError(lena512, lena512_last) << std::endl;
 	} catch(const std::string& s)
 	{
 		std::cerr << "EXCEPTION: " << s << std::endl;

@@ -515,6 +515,7 @@ namespace amr
 		linearize(tmp);
 
 		analyse(tmp, niveau-1);
+
 		/*for(int x = 0; x<size; ++x)
 		{
 			for(int y = 0; y<size; ++y)
@@ -524,15 +525,18 @@ namespace amr
 				tmp[x*size+y] += 127;
 			}
 		}*/
+
 		Signal2D dl(s.subSignal(tmpSize, 0, tmpSize));
 		Signal2D dc(s.subSignal(0, tmpSize, tmpSize));
 		Signal2D dd(s.subSignal(tmpSize, tmpSize, tmpSize));
+		
 		addValue(dl, 127); addValue(dc,127); addValue(dd,127);
 
-		s.fill(tmp, 0, 0, tmp.getSize());
 		s.fill(dl, tmpSize, 0, tmpSize);
 		s.fill(dc, 0, tmpSize, tmpSize);
 		s.fill(dd, tmpSize, tmpSize, tmpSize);
+
+		s.fill(tmp, 0, 0, tmp.getSize());
 	}
 
 	void synthese2DRecurs(Signal2D& s, int niveau, int size)
@@ -542,9 +546,7 @@ namespace amr
 		if(niveau <= 0 || size <= 0) return;
 
 		synthese2DRecurs(s, niveau-1, size);
-		size *= 2;
-		
-		Signal2D tmp = s.subSignal(0,0,size);
+
 		/*for(int x = 0; x<size; ++x)
 		{
 			for(int y = 0; y<size; ++y)
@@ -554,6 +556,19 @@ namespace amr
 				tmp[x*size+y] -= 127;
 			}
 		}*/
+
+		Signal2D dl(s.subSignal(size, 0, size));
+		Signal2D dc(s.subSignal(0, size, size));
+		Signal2D dd(s.subSignal(size, size, size));
+		
+		addValue(dl, -127); addValue(dc, -127); addValue(dd, -127);
+
+		s.fill(dl, size, 0, size);
+		s.fill(dc, 0, size, size);
+		s.fill(dd, size, size, size);
+
+		size *= 2;
+		Signal2D tmp = s.subSignal(0,0,size);
 
 		biortho97::synthese(tmp);
 		
