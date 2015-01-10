@@ -77,6 +77,14 @@ namespace amr
 		
 		tools::addValue(dl, 127); tools::addValue(dc,127); tools::addValue(dd,127);
 
+		std::cout << "Analyse " << tmpSize << ": " << std::endl;
+		std::cout << "\tMoyenne dl : " << tools::average(dl) << std::endl;
+		std::cout << "\tVariance dl : " << tools::variance(dl) << std::endl;
+		std::cout << "\tMoyenne dc : " << tools::average(dc) << std::endl;
+		std::cout << "\tVariance dc : " << tools::variance(dc) << std::endl;
+		std::cout << "\tMoyenne dd : " << tools::average(dd) << std::endl;
+		std::cout << "\tVariance dd : " << tools::variance(dd) << std::endl << std::endl;
+
 		s.fill(dl, tmpSize, 0, tmpSize);
 		s.fill(dc, 0, tmpSize, tmpSize);
 		s.fill(dd, tmpSize, tmpSize, tmpSize);

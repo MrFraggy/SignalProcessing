@@ -89,6 +89,7 @@ int main(void)
 	//////////////////////////////////////////////
 	/// LENA SIGNAL
 	//////////////////////////////////////////////
+
 	Signal2D lena2D;
 	lena2D.load("./data/lena.bmp");
 	
@@ -115,7 +116,10 @@ int main(void)
 		R : Même resultat mais plus facile à réutiliser/implementer?
 	*/
 
-	// AMR
+	//////////////////////////////////////////////
+	/// AMR
+	//////////////////////////////////////////////
+
 	try{
 
 		/*Signal lena512_1 = lena512;
@@ -147,7 +151,7 @@ int main(void)
 
 		Signal lena512_last = lena2D.getLine(255);
 
-		std::cout << tools::significantError(lena512, lena512_last) << std::endl;
+		std::cout << "Erreur significative : " << tools::significantError(lena512, lena512_last) << std::endl;
 	} catch(const std::string& s)
 	{
 		std::cerr << "EXCEPTION: " << s << std::endl;

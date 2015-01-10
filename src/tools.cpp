@@ -86,6 +86,64 @@ double significantError(const Signal& s1, const Signal& s2)
 	return error;
 }
 
+double average(const Signal& s)
+{
+	double average = 0;
+
+	for(int i = 0; i < s.getSize(); ++i)
+	{
+		average += s[i];
+	}
+
+	return average / s.getSize();
+}
+
+double average(const Signal2D& s)
+{
+	int size = s.getSize();
+	double average = 0;
+
+	for(int i = 0; i < size; ++i)
+	{
+		for (int j = 0; j < size; ++j)
+		{
+			average += s[i];
+		}
+	}
+
+	return average / (size * size);
+}
+
+double variance(const Signal& s)
+{
+	double variance = 0;
+	double moy = average(s);
+
+	for(int i = 0; i < s.getSize(); ++i)
+	{
+		variance += (s[i] - moy) * (s[i] - moy);
+	}
+
+	return variance / (s.getSize() - 1);
+}
+
+double variance(const Signal2D& s)
+{
+	int size = s.getSize();
+	double variance = 0;
+	double moy = average(s);
+
+	for(int i = 0; i < size; ++i)
+	{
+		for(int j = 0; j < size; ++j)
+		{
+			variance += (s[i] - moy) * (s[i] - moy);
+		}
+	}
+
+	return variance / (size * size - 1);
+}
+
 void minMaxAverage(const Signal& s1, unsigned int level)
 {
 	uint size = s1.getSize();
@@ -141,7 +199,7 @@ void addValue(Signal2D& s, double d)
 void linearize(Signal2D& s)
 {
 	uint size = s.getSize();
-	std::cout << "linearize " << size << std::endl;
+	// std::cout << "linearize " << size << std::endl;
 	double min = s[0], max = s[0];
 
 	// Get min & max

@@ -18,7 +18,13 @@ namespace tools
 	void addValue(Signal2D& s, double d);
 	void linearize(Signal2D& s);
 
+	double average(const Signal& s);
+	double variance(const Signal& s);
+	double average(const Signal2D& s);
+	double variance(const Signal2D& s);
+
 	double significantError(const Signal& s1, const Signal& s2);
+
 	void minMaxAverage(const Signal& s1, unsigned int level);
 }
 
