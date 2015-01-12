@@ -298,10 +298,7 @@ std::vector<double> computeDebit(const Signal2D& s, int level, double debitGloba
 			bi = 0;
 		debits.push_back(bi);
 	}
-	for(int i = 0; i<variances.size(); ++i)
-	{
-		std::cout << variances[i].var << " " << debits[i] << std::endl;
-	}
+
 	return debits;
 /*
 	for(uint32_t i = 0; i<size; ++i)
@@ -336,11 +333,12 @@ void quantifiate(Signal2D& s, int level, double debitGlobal)
 		quantlm(dl.get(), i*i, std::floor(pow(2,v[idx++])));
 		quantlm(dc.get(), i*i, std::floor(pow(2,v[idx++])));
 		quantlm(dd.get(), i*i, std::floor(pow(2,v[idx++])));
-		std::cout << idx << " " << v.size() << std::endl;
 		s.fill(dl, i,0,i);
 		s.fill(dc, 0,i,i);
 		s.fill(dd, i,i,i);
 	}
-
+	double sum = 0;
+	for(auto& d: v)
+		sum += d;
 }
 }
