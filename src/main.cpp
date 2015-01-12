@@ -143,18 +143,25 @@ int main(void)
 		lena2D.save("./data/lenaBmp/test.bmp");
 		Signal2D tmp = lena2D.subSignal(0,0,256);*/
 		Signal2D lenaSave = lena2D;
+		Signal2D lena2D_noquant = lena2D;
 		amr::analyse(lena2D, 3);
-		auto v = tools::computeDebit(lena2D, 3, 0.5);
-		for(auto& b : v)
-			std::cout << b << std::endl;
+		amr::analyse(lena2D_noquant, 3);
 		tools::quantifiate(lena2D, 3, 0.5);
-		Signal2D lenaCopy = lena2D;
-		tools::arrange(lenaCopy, 3);
-		lenaCopy.save("./data/lenaBmp/test_quant.bmp");
-		amr::synthese(lena2D, 3);
-		lena2D.save("./data/lenaBmp/test2_quant.bmp");
 
-		//Signal lena512_last = lena2D.getLine(255);
+		{
+			Signal2D lenaCopy = lena2D;
+			tools::arrange(lenaCopy, 3);
+			lenaCopy.save("./data/lenaBmp/test_quant.bmp");
+		}
+		{
+			Signal2D lenaCopy = lena2D_noquant;
+			tools::arrange(lenaCopy, 3);
+			lenaCopy.save("./data/lenaBmp/test_noquant.bmp");
+		}
+		amr::synthese(lena2D, 3);
+		amr::synthese(lena2D_noquant, 3);
+		lena2D.save("./data/lenaBmp/test2_quant.bmp");
+		lena2D_noquant.save("./data/lenaBmp/test2_noquant.bmp");
 
 		std::cout << "Erreur significative : " << tools::significantError(lena2D, lenaSave) << std::endl;
 		std::cout << "PSNR : " << tools::psnr(lena2D, lenaSave) << std::endl;
