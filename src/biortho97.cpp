@@ -95,13 +95,13 @@ namespace biortho97
 	}
 
 	void analyse(Signal2D& s) {
-		for(int i = 0; i<s.getSize(); ++i) {
+		for(uint32_t i = 0; i<s.getSize(); ++i) {
 			Signal l = s.getLine(i);
 			analyse(l);
 			s.setLine(l, i);
 		}
 
-		for(int i = 0; i<s.getSize(); ++i) {
+		for(uint32_t i = 0; i<s.getSize(); ++i) {
 			Signal l = s.getColumn(i);
 			analyse(l);
 			s.setColumn(l, i);
@@ -109,13 +109,13 @@ namespace biortho97
 	}
 
 	void synthese(Signal2D& s) {
-		for(int i = 0; i<s.getSize(); ++i) {
+		for(uint32_t i = 0; i<s.getSize(); ++i) {
 			Signal l = s.getColumn(i);
 			synthese(l);
 			s.setColumn(l, i);
 		}
 
-		for(int i = 0; i<s.getSize(); ++i) {
+		for(uint32_t i = 0; i<s.getSize(); ++i) {
 			Signal l = s.getLine(i);
 			synthese(l);
 			s.setLine(l, i);

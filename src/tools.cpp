@@ -1,6 +1,7 @@
 #include "tools.hpp"
 #include "signal.hpp"
 #include "signal2d.hpp"
+#include "quantlm.hpp"
 #include <iostream>
 #include <sstream>
 #include <cmath>
@@ -83,7 +84,29 @@ double significantError(const Signal& s1, const Signal& s2)
 		error += std::isnan(tmp) ? 0 : tmp;
 	}
 
-	return error;
+	return error/s1.getSize();
+}
+
+double significantError(const Signal2D& s1, const Signal2D& s2)
+{
+	double error = 0.;
+	if(s1.getSize() != s2.getSize())
+		throw std::string("Signals doesn't have the same size");
+
+	uint32_t size = s1.getSize();
+	for(uint32_t i = 0; i<size*size; ++i)
+	{
+		double tmp = (s1[i]-s2[i])*(s1[i]-s2[i]);
+		error += std::isnan(tmp) ? 0 : tmp;
+	}
+
+	return error/(size*size);
+}
+
+double psnr(const Signal2D& s1, const Signal2D& s2)
+{
+	double eqm = significantError(s1,s2);
+	return 10*std::log10((255*255)/eqm);
 }
 
 double average(const Signal& s)
@@ -100,15 +123,12 @@ double average(const Signal& s)
 
 double average(const Signal2D& s)
 {
-	int size = s.getSize();
+	uint32_t size = s.getSize();
 	double average = 0;
 
-	for(int i = 0; i < size; ++i)
+	for(uint32_t i = 0; i < size*size; ++i)
 	{
-		for (int j = 0; j < size; ++j)
-		{
-			average += s[i];
-		}
+		average += s[i];
 	}
 
 	return average / (size * size);
@@ -129,16 +149,13 @@ double variance(const Signal& s)
 
 double variance(const Signal2D& s)
 {
-	int size = s.getSize();
+	uint32_t size = s.getSize();
 	double variance = 0;
 	double moy = average(s);
 
-	for(int i = 0; i < size; ++i)
+	for(uint32_t i = 0; i < size*size; ++i)
 	{
-		for(int j = 0; j < size; ++j)
-		{
-			variance += (s[i] - moy) * (s[i] - moy);
-		}
+		variance += (s[i] - moy) * (s[i] - moy);
 	}
 
 	return variance / (size * size - 1);
@@ -146,7 +163,7 @@ double variance(const Signal2D& s)
 
 double debit(const double globalDebit, const double var)
 {
-	return NULL;
+	return 0.0;
 }
 
 void minMaxAverage(const Signal& s1, unsigned int level)
@@ -219,5 +236,108 @@ void linearize(Signal2D& s)
 	{
 		s[i] = (s[i])/(max) * 255;
 	}
+}
+
+void arrange(Signal2D& s, unsigned int niveau)
+{
+	int size = s.getSize()/(std::pow(2,niveau));
+	Signal2D tmp = s.subSignal(0,0,size);
+	linearize(tmp);
+	s.fill(tmp,0,0,size);
+	for(uint32_t i = size; i<s.getSize(); i = i*2)
+	{
+		Signal2D dl(s.subSignal(i, 0, i));
+		Signal2D dc(s.subSignal(0, i, i));
+		Signal2D dd(s.subSignal(i, i, i));
+		
+		tools::addValue(dl, 127); tools::addValue(dc,127); tools::addValue(dd,127);
+
+		s.fill(dl, i, 0, i);
+		s.fill(dc, 0, i, i);
+		s.fill(dd, i, i, i);
+	}
+}
+
+std::vector<double> computeDebit(const Signal2D& s, int level, double debitGlobal)
+{
+	struct Var {
+		double var;
+		uint32_t size;
+	};
+
+	uint32_t size = s.getSize();
+	uint32_t minSize = size/std::pow(2, level);
+	std::vector<Var> variances;
+	{
+		Signal2D da(s.subSignal(0,0,minSize));
+		variances.push_back({variance(da), minSize});
+	}
+
+	for(uint32_t i = minSize; i<size; i *= 2)
+	{
+		Signal2D dl(s.subSignal(i, 0, i));
+		Signal2D dc(s.subSignal(0, i, i));
+		Signal2D dd(s.subSignal(i, i, i));
+		variances.push_back({variance(dl),i});
+		variances.push_back({variance(dc),i});
+		variances.push_back({variance(dd),i});
+	}
+
+	std::vector<double> debits;
+
+	for(auto& i : variances)
+	{
+		double product = 1;
+		for(auto& j : variances)
+		{
+			product *= std::pow(j.var, (j.size*j.size)*1.0/(size*size));
+		}
+
+		double bi = debitGlobal+ 0.5 * std::log2(i.var/product);
+		debits.push_back(bi);
+	}
+	for(int i = 0; i<variances.size(); ++i)
+	{
+		std::cout << variances[i].var << " " << debits[i] << std::endl;
+	}
+	return debits;
+/*
+	for(uint32_t i = 0; i<size; ++i)
+	{
+		for(uint32_t j = 0; j<size; ++j)
+		{
+
+		}
+	}*/
+}
+
+void quantifiate(Signal2D& s, int level, double debitGlobal)
+{
+	auto v = computeDebit(s, level, debitGlobal);
+	
+	uint32_t size = s.getSize();
+	uint32_t minSize = size/std::pow(2, level);
+	{
+		Signal2D da(s.subSignal(0,0,minSize));
+		quantlm(da.get(), da.getSize(), std::floor(pow(2,v[0])));
+		s.fill(da, 0,0,minSize);
+	}
+
+	int idx = 1;
+	for(uint32_t i = minSize; i<size; i *= 2)
+	{
+		Signal2D dl(s.subSignal(i, 0, i));
+		Signal2D dc(s.subSignal(0, i, i));
+		Signal2D dd(s.subSignal(i, i, i));
+		
+		quantlm(dl.get(), dl.getSize(), std::floor(pow(2,v[idx++])));
+		quantlm(dc.get(), dc.getSize(), std::floor(pow(2,v[idx++])));
+		quantlm(dd.get(), dd.getSize(), std::floor(pow(2,v[idx++])));
+	
+		s.fill(dl, i,0,i);
+		s.fill(dc, 0,i,i);
+		s.fill(dd, i,i,i);
+	}
+
 }
 }

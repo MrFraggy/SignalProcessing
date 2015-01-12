@@ -28,7 +28,7 @@ public:
 	int getOffset() const;
 
 protected:
-	std::unique_ptr<double> data;
+	std::unique_ptr<double[]> data;
 	int size;
 	int offset;
 };

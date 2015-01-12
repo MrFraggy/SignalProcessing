@@ -142,14 +142,22 @@ int main(void)
 
 		lena2D.save("./data/lenaBmp/test.bmp");
 		Signal2D tmp = lena2D.subSignal(0,0,256);*/
+		Signal2D lenaSave = lena2D;
 		amr::analyse(lena2D, 3);
-		lena2D.save("./data/lenaBmp/test.bmp");
+		auto v = tools::computeDebit(lena2D, 3, 0.5);
+		for(auto& b : v)
+			std::cout << b << std::endl;
+		tools::quantifiate(lena2D, 3, 0.5);
+		Signal2D lenaCopy = lena2D;
+		tools::arrange(lenaCopy, 3);
+		lenaCopy.save("./data/lenaBmp/test_quant.bmp");
 		amr::synthese(lena2D, 3);
-		lena2D.save("./data/lenaBmp/test2.bmp");
+		lena2D.save("./data/lenaBmp/test2_quant.bmp");
 
-		Signal lena512_last = lena2D.getLine(255);
+		//Signal lena512_last = lena2D.getLine(255);
 
-		std::cout << "Erreur significative : " << tools::significantError(lena512, lena512_last) << std::endl;
+		std::cout << "Erreur significative : " << tools::significantError(lena2D, lenaSave) << std::endl;
+		std::cout << "PSNR : " << tools::psnr(lena2D, lenaSave) << std::endl;
 	} catch(const std::string& s)
 	{
 		std::cerr << "EXCEPTION: " << s << std::endl;
@@ -170,32 +178,45 @@ int main(void)
 		Commentez ces valeurs. 
 		R:
 		Analyse 64: 
-			Moyenne dl : 126.69
-			Variance dl : 32.3168
-			Moyenne dc : 127.483
-			Variance dc : 14.8526
-			Moyenne dd : 127.146
-			Variance dd : 4.1833
-
+			Moyenne da : 988.064
+			Variance d : 128009
+			Moyenne dl : -0.947905
+			Variance dl : 3485.32
+			Moyenne dc : -0.000835034
+			Variance dc : 1092.59
+			Moyenne dd : -0.329082
+			Variance dd : 1065.01
+			Moyenne des variances: 33413.1
+	
 		Analyse 128: 
-			Moyenne dl : 126.95
-			Variance dl : 0.488768
-			Moyenne dc : 126.888
-			Variance dc : 19.6341
-			Moyenne dd : 127.048
-			Variance dd : 0.125768
+			Moyenne da : 246.696
+			Variance d : 216627
+			Moyenne dl : -0.0131988
+			Variance dl : 170.159
+			Moyenne dc : 0.121534
+			Variance dc : 443.677
+			Moyenne dd : 0.071866
+			Variance dd : 115.94
+			Moyenne des variances: 54339.1
 
 		Analyse 256: 
-			Moyenne dl : 126.786
-			Variance dl : 3.36558
-			Moyenne dc : 127.111
-			Variance dc : 17.0578
-			Moyenne dd : 127.012
-			Variance dd : 1.61692
-
+			Moyenne da : 61.7192
+			Variance d : 65742.3
+			Moyenne dl : 0.0462509
+			Variance dl : 42.9312
+			Moyenne dc : 0.00810543
+			Variance dc : 17.217
+			Moyenne dd : 0.00859221
+			Variance dd : 8.67861
+			Moyenne des variances: 16452.8
 
 			A 		 D2			D1
 		|--------|--------|----------------|	
+
+		Q: Si l'on réalise une AMR2D de niveau j, combien de sous-bandes obtient-on?
+		R: j*3 sous-bandes de détail + 1 sous-bande d'approximation
+
+		
 	*/
 
 	

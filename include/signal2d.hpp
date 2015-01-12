@@ -10,7 +10,7 @@
 class Signal2D 
 {
 public:
-	Signal2D(int size = 0);
+	Signal2D(uint32_t size = 0);
 	Signal2D(const Signal2D& other);
 	~Signal2D() = default;
 
@@ -27,16 +27,17 @@ public:
 	void setLine(const Signal& s, int line);
 	void setColumn(const Signal& s, int col);
 
-	Signal getLine(int l);
-	Signal getColumn(int c);
+	Signal getLine(int l) const;
+	Signal getColumn(int c) const;
 
-	int getSize() const;
+	uint32_t getSize() const;
 
-	Signal2D subSignal(int x, int y, int length);
+	Signal2D subSignal(int x, int y, int length) const;
 
+	double* get() { return data.get(); }
 protected:
-	std::unique_ptr<double> data;
-	int size;
+	std::unique_ptr<double[]> data;
+	uint32_t size;
 };
 
 #endif
