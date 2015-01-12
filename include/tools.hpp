@@ -38,7 +38,7 @@ namespace tools
 
 	std::vector<double> computeDebit(const Signal2D& s, int level, double debitGlobal);
 
-	void quantifiate(Signal2D& s, int level, double debitGlobal);
+	void quantifiate(Signal2D& s, int level, std::vector<double> debits);
 }
 
 #endif

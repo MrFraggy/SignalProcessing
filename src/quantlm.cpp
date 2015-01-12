@@ -179,7 +179,7 @@ void quantlm_idx(double* x,int n,int nq) {
   //}
 
   for (int i=0;i<n;i++) {
-    printf("x[%d]=%f qx[%d]=%f\n",i,x[i],i,qi[i]);
+    //printf("x[%d]=%f qx[%d]=%f\n",i,x[i],i,qi[i]);
     //x[i]=q[qi[i]];
     x[i]=qi[i];
   }

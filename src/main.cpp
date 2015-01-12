@@ -148,7 +148,8 @@ int main(void)
 			Signal2D lena2D_noquant = lena2D;
 			amr::analyse(lena2D_quant, 3);
 			amr::analyse(lena2D_noquant, 3);
-			tools::quantifiate(lena2D_quant, 3, 4);
+			auto debits = tools::computeDebit(lena2D_quant, 3, 4);
+			tools::quantifiate(lena2D_quant, 3, debits);
 
 			{
 				Signal2D lenaCopy = lena2D_quant;
@@ -172,7 +173,8 @@ int main(void)
 			Signal2D lenaSave = lena2D;
 			Signal2D lena2D_quant = lena2D;
 			amr::analyse(lena2D_quant, 3);
-			tools::quantifiate(lena2D_quant, 3, 2);
+			auto debits = tools::computeDebit(lena2D_quant, 3, 2);
+			tools::quantifiate(lena2D_quant, 3, debits);
 
 			{
 				Signal2D lenaCopy = lena2D_quant;
@@ -190,7 +192,8 @@ int main(void)
 			Signal2D lenaSave = lena2D;
 			Signal2D lena2D_quant = lena2D;
 			amr::analyse(lena2D_quant, 3);
-			tools::quantifiate(lena2D_quant, 3, 1);
+			auto debits = tools::computeDebit(lena2D_quant, 3, 1);
+			tools::quantifiate(lena2D_quant, 3, debits);
 
 			{
 				Signal2D lenaCopy = lena2D_quant;
@@ -207,8 +210,9 @@ int main(void)
 			Signal2D lenaSave = lena2D;
 			Signal2D lena2D_quant = lena2D;
 			amr::analyse(lena2D_quant, 3);
-			tools::quantifiate(lena2D_quant, 3, 0.5);
 
+			auto debits = tools::computeDebit(lena2D_quant, 3, 0.5);
+			tools::quantifiate(lena2D_quant, 3, debits);
 			{
 				Signal2D lenaCopy = lena2D_quant;
 				tools::arrange(lenaCopy, 3);
