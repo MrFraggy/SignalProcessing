@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 
-Signal2D::Signal2D(int size) : 
+Signal2D::Signal2D(uint32_t size) : 
 	data(new double[size*size]), size(size) 
 {
 	std::memset(data.get(), 0, sizeof(double)*size);
@@ -38,7 +38,7 @@ double& Signal2D::operator[](unsigned int i)
 bool Signal2D::load(const std::string& filename) 
 {
 	unsigned int tmp;
-	data.reset(charge_bmp256(filename.c_str(), (unsigned int*)&size, &tmp));
+	data = std::move(charge_bmp256(filename.c_str(), size, tmp));
 	return data != nullptr;
 }
 
@@ -62,20 +62,20 @@ void Signal2D::fill(const Signal2D& s, int x, int y, int length)
 
 void Signal2D::setLine(const Signal& s, int line)
 {
-	for(int i = 0; i<size; ++i)
+	for(uint32_t i = 0; i<size; ++i)
 		data.get()[i+line*size] = s[i];
 }
 
 void Signal2D::setColumn(const Signal& s, int col)
 {
-	for(int i = 0; i<size; ++i)
+	for(uint32_t i = 0; i<size; ++i)
 		data.get()[col+i*size] = s[i];
 }
 
 Signal Signal2D::getLine(int line) 
 {
 	Signal s(size);
-	for(int i = 0; i<size; ++i)
+	for(uint32_t i = 0; i<size; ++i)
 		s[i] = data.get()[i+line*size];
 	return s;
 }
@@ -83,12 +83,12 @@ Signal Signal2D::getLine(int line)
 Signal Signal2D::getColumn(int col) 
 {
 	Signal s(size);
-	for(int i = 0; i<size; ++i)
+	for(uint32_t i = 0; i<size; ++i)
 		s[i] = data.get()[col+i*size];
 	return s;
 }
 
-int Signal2D::getSize() const 
+uint32_t Signal2D::getSize() const 
 {
 	return size;
 }

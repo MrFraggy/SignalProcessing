@@ -147,13 +147,13 @@ namespace lifting
 	}
 
 	void analyse(Signal2D& s) {
-		for(int i = 0; i<s.getSize(); ++i) {
+		for(uint32_t i = 0; i<s.getSize(); ++i) {
 			Signal l = s.getLine(i);
 			analyse(l);
 			s.setLine(l, i);
 		}
 
-		for(int i = 0; i<s.getSize(); ++i) {
+		for(uint32_t i = 0; i<s.getSize(); ++i) {
 			Signal l = s.getColumn(i);
 			analyse(l);
 			s.setColumn(l, i);
