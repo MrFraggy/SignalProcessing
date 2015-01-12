@@ -41,15 +41,11 @@ std::unique_ptr<double[]> charge_bmp256(const std::string& fichier, uint32_t& la
 	}
 	BitmapHeader header = {0};
 	image.read((char*)&header,sizeof(BitmapHeader));
-	std::cout 	<< header.id << " " 
-				<< header.fileSize << " "
-				<< std::endl;
 	BitmapInfoHeader infos = {0};
 	image.read((char*)&infos, sizeof(BitmapInfoHeader));
 	hauteur = infos.height;
 	largeur = infos.width;
-	std::cout << infos.width << " " << infos.height << std::endl;
-	
+		
 	std::unique_ptr<uint8_t[]> pixels(new uint8_t[largeur*hauteur]);
 	image.seekg(header.offset, std::ios_base::beg);
 	image.read((char*)pixels.get(), sizeof(uint8_t)*largeur*hauteur);

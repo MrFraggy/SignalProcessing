@@ -71,23 +71,26 @@ namespace amr
 			}
 		}*/
 
-		/*Signal2D dl(s.subSignal(tmpSize, 0, tmpSize));
+		Signal2D dl(s.subSignal(tmpSize, 0, tmpSize));
 		Signal2D dc(s.subSignal(0, tmpSize, tmpSize));
-		Signal2D dd(s.subSignal(tmpSize, tmpSize, tmpSize));*/
+		Signal2D dd(s.subSignal(tmpSize, tmpSize, tmpSize));
 		
 		//tools::addValue(dl, 127); tools::addValue(dc,127); tools::addValue(dd,127);
-
+		auto varda = tools::variance(tmp);
+		auto vardl = tools::variance(dl);
+		auto vardc = tools::variance(dc);
+		auto vardd = tools::variance(dd);
 		std::cout << "Analyse " << tmpSize << ": " << std::endl;
-		std::cout << "\tMoyenne dl : " << tools::average(tmp) << std::endl;
-		std::cout << "\tVariance dl : " << tools::variance(tmp) << std::endl;
-		/*
+		std::cout << "\tMoyenne da : " << tools::average(tmp) << std::endl;
+		std::cout << "\tVariance d : " << varda << std::endl;
+		
 		std::cout << "\tMoyenne dl : " << tools::average(dl) << std::endl;
-		std::cout << "\tVariance dl : " << tools::variance(dl) << std::endl;
+		std::cout << "\tVariance dl : " << vardl << std::endl;
 		std::cout << "\tMoyenne dc : " << tools::average(dc) << std::endl;
-		std::cout << "\tVariance dc : " << tools::variance(dc) << std::endl;
+		std::cout << "\tVariance dc : " << vardc << std::endl;
 		std::cout << "\tMoyenne dd : " << tools::average(dd) << std::endl;
-		std::cout << "\tVariance dd : " << tools::variance(dd) << std::endl << std::endl;
-*/
+		std::cout << "\tVariance dd : " << vardd << std::endl << std::endl;
+		std::cout << "Moyenne des variances: " << (varda+vardl+vardc+vardd)/4 << std::endl;
 		/*s.fill(dl, tmpSize, 0, tmpSize);
 		s.fill(dc, 0, tmpSize, tmpSize);
 		s.fill(dd, tmpSize, tmpSize, tmpSize);*/

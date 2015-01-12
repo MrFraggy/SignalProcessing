@@ -119,15 +119,12 @@ double average(const Signal& s)
 
 double average(const Signal2D& s)
 {
-	int size = s.getSize();
+	uint32_t size = s.getSize();
 	double average = 0;
 
-	for(int i = 0; i < size; ++i)
+	for(uint32_t i = 0; i < size*size; ++i)
 	{
-		for (int j = 0; j < size; ++j)
-		{
-			average += s[i];
-		}
+		average += s[i];
 	}
 
 	return average / (size * size);
@@ -148,16 +145,13 @@ double variance(const Signal& s)
 
 double variance(const Signal2D& s)
 {
-	int size = s.getSize();
+	uint32_t size = s.getSize();
 	double variance = 0;
 	double moy = average(s);
 
-	for(int i = 0; i < size; ++i)
+	for(uint32_t i = 0; i < size*size; ++i)
 	{
-		for(int j = 0; j < size; ++j)
-		{
-			variance += (s[i] - moy) * (s[i] - moy);
-		}
+		variance += (s[i] - moy) * (s[i] - moy);
 	}
 
 	return variance / (size * size - 1);
