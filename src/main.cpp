@@ -29,45 +29,38 @@ int main(void)
 	/// LELECUM
 	//////////////////////////////////////////////
 
-	/*Signal signal;
+	Signal signal;
 	signal.load("./data/leleccum.txt");
-
-	haar::analyse(signal);
-	signal.savepng("./data/leleccum/haaranalyse.png");
-	haar::synthese(signal);
-	signal.savepng("./data/leleccum/haar.png");
-	biortho97::analyse(signal);
-	signal.savepng("./data/leleccum/biortho97analyse.png");
-	biortho97::synthese(signal);
-	signal.savepng("./data/leleccum/biortho97.png");*/
-
-	/*
+	
 	Signal signalHaar = signal;
 	Signal signalLift = signal;
 	Signal signalBiortho = signal;
 	Signal signalAMR = signal;
+
 	lifting::analyse(signalLift);
+	signalLift.savepng("./data/leleccum/liftinganalyse.png");
 	lifting::synthese(signalLift);
+	signalLift.savepng("./data/leleccum/lifting.png");
+	
 	haar::analyse(signalHaar);
+	signalHaar.savepng("./data/leleccum/haaranalyse.png");
 	haar::synthese(signalHaar);
+	signalHaar.savepng("./data/leleccum/haar.png");
+
 	biortho97::analyse(signalBiortho);
+	signalBiortho.savepng("./data/leleccum/biortho97analyse.png");
 	biortho97::synthese(signalBiortho);
-	amr::analyse(signalBiortho, 1);
-	amr::synthese(signalBiortho, 1);
-	signalLift.savepng("./data/test.png");
-	signalLift.save("./data/test1.dat");
-	signalBiortho.savepng("./data/test2.png");
-	signalBiortho.save("./data/test2.dat");
-	signalHaar.savepng("./data/test3.png");
-	signalHaar.save("./data/test3.dat");
-	signal.save("./data/test.dat");
-	signal.savepng("./data/base.png");
-	//signalHaar.savepng("./data/test2.png");
+	signalBiortho.savepng("./data/leleccum/biortho97.png");
+
+	amr::analyse(signalAMR, 1);
+	signalAMR.savepng("./data/leleccum/amranalyse.png");
+	amr::synthese(signalAMR, 1);
+	signalAMR.savepng("./data/leleccum/amr.png");
+
 	std::cout << "Error: " << tools::significantError(signal, signal) << std::endl;
 	std::cout << "Error Lift: " << tools::significantError(signal, signalLift) << std::endl;
 	std::cout << "Error Haar: " << tools::significantError(signal, signalHaar) << std::endl;
 	std::cout << "Error Biortho: " << tools::significantError(signal, signalBiortho) << std::endl;
-	*/
 
 	//////////////////////////////////////////////
 	/// RAMPE
@@ -87,34 +80,39 @@ int main(void)
 	rampe.savepng("./data/rampe/biortho97.png");*/
 
 	//////////////////////////////////////////////
-	/// LENA SIGNAL
+	/// LENA SIGNAL 1D
 	//////////////////////////////////////////////
-
-	Signal2D lena2D;
-	lena2D.load("./data/lena.bmp");
 	
-	Signal lena512 = lena2D.getLine(255);
-
-	//lena512.load("./data/lena.txt");
+	Signal lena1D;
+	lena1D.load("./data/lena.txt");
 	
-	// haar::analyse(lena512);
-	// lena512.savepng("./data/lena512/haaranalyse.png");
-	// haar::synthese(lena512);
-	// lena512.savepng("./data/lena512/haar.png");
-	// biortho97::analyse(lena512);
-	// lena512.savepng("./data/lena512/biortho97analyse.png");
-	// biortho97::synthese(lena512);
-	// lena512.savepng("./data/lena512/biortho97.png");
-	// lifting::analyse(lena512);
-	// lena512.savepng("./data/lena512/liftinganalyse.png");
-	// lifting::synthese(lena512);
-	// lena512.savepng("./data/lena512/lifting.png");
+	haar::analyse(lena1D);
+	lena1D.savepng("./data/lena1D/haaranalyse.png");
+	haar::synthese(lena1D);
+	lena1D.savepng("./data/lena1D/haar.png");
+	biortho97::analyse(lena1D);
+	lena1D.savepng("./data/lena1D/biortho97analyse.png");
+	biortho97::synthese(lena1D);
+	lena1D.savepng("./data/lena1D/biortho97.png");
+	lifting::analyse(lena1D);
+	lena1D.savepng("./data/lena1D/liftinganalyse.png");
+	lifting::synthese(lena1D);
+	lena1D.savepng("./data/lena1D/lifting.png");
 
 	/*
 		Q : Tracez et commentez les courbes des coefficients.
 		Décrivez les interêts du "lifting".
 		R : Même resultat mais plus facile à réutiliser/implementer?
 	*/
+
+	//////////////////////////////////////////////
+	/// LENA SIGNAL 2D
+	//////////////////////////////////////////////
+
+	Signal2D lena2D;
+	lena2D.load("./data/lena.bmp");
+
+	Signal lena512 = lena2D.getLine(255);
 
 	//////////////////////////////////////////////
 	/// AMR
