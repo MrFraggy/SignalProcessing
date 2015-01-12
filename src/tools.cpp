@@ -298,10 +298,7 @@ std::vector<double> computeDebit(const Signal2D& s, int level, double debitGloba
 			bi = 0;
 		debits.push_back(bi);
 	}
-	for(int i = 0; i<variances.size(); ++i)
-	{
-		std::cout << variances[i].var << " " << debits[i] << std::endl;
-	}
+
 	return debits;
 /*
 	for(uint32_t i = 0; i<size; ++i)
@@ -313,16 +310,14 @@ std::vector<double> computeDebit(const Signal2D& s, int level, double debitGloba
 	}*/
 }
 
-void quantifiate(Signal2D& s, int level, double debitGlobal)
-{
-	auto v = computeDebit(s, level, debitGlobal);
-	
+void quantifiate(Signal2D& s, int level, std::vector<double> debits)
+{	
 	uint32_t size = s.getSize();
 	uint32_t minSize = size/std::pow(2, level);
 	int idx = 0;
 	{
 		Signal2D da(s.subSignal(0,0,minSize));
-		quantlm(da.get(), da.getSize()*da.getSize(), std::floor(pow(2,v[idx++])));
+		quantlm(da.get(), da.getSize()*da.getSize(), std::floor(pow(2,debits[idx++])));
 		s.fill(da, 0,0,minSize);
 	}
 
@@ -333,14 +328,41 @@ void quantifiate(Signal2D& s, int level, double debitGlobal)
 		Signal2D dc(s.subSignal(0, i, i));
 		Signal2D dd(s.subSignal(i, i, i));
 		
-		quantlm(dl.get(), i*i, std::floor(pow(2,v[idx++])));
-		quantlm(dc.get(), i*i, std::floor(pow(2,v[idx++])));
-		quantlm(dd.get(), i*i, std::floor(pow(2,v[idx++])));
-		std::cout << idx << " " << v.size() << std::endl;
+		quantlm(dl.get(), i*i, std::floor(pow(2,debits[idx++])));
+		quantlm(dc.get(), i*i, std::floor(pow(2,debits[idx++])));
+		quantlm(dd.get(), i*i, std::floor(pow(2,debits[idx++])));
+		s.fill(dl, i,0,i);
+		s.fill(dc, 0,i,i);
+		s.fill(dd, i,i,i);
+	}
+}
+
+void encode(Signal2D& s, int level, std::vector<double> debits)
+{
+	uint32_t size = s.getSize();
+	uint32_t minSize = size/std::pow(2, level);
+	int idx = 0;
+	{
+		Signal2D da(s.subSignal(0,0,minSize));
+		quantlm_idx(da.get(), da.getSize()*da.getSize(), std::floor(pow(2,debits[idx++])));
+		s.fill(da, 0,0,minSize);
+	}
+
+	
+	for(uint32_t i = minSize; i<size; i *= 2)
+	{
+		Signal2D dl(s.subSignal(i, 0, i));
+		Signal2D dc(s.subSignal(0, i, i));
+		Signal2D dd(s.subSignal(i, i, i));
+		
+		quantlm_idx(dl.get(), i*i, std::floor(pow(2,debits[idx++])));
+		quantlm_idx(dc.get(), i*i, std::floor(pow(2,debits[idx++])));
+		quantlm_idx(dd.get(), i*i, std::floor(pow(2,debits[idx++])));
 		s.fill(dl, i,0,i);
 		s.fill(dc, 0,i,i);
 		s.fill(dd, i,i,i);
 	}
 
+	
 }
 }

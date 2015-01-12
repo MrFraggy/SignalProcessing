@@ -142,29 +142,87 @@ int main(void)
 
 		lena2D.save("./data/lenaBmp/test.bmp");
 		Signal2D tmp = lena2D.subSignal(0,0,256);*/
-		Signal2D lenaSave = lena2D;
-		Signal2D lena2D_noquant = lena2D;
-		amr::analyse(lena2D, 3);
-		amr::analyse(lena2D_noquant, 3);
-		tools::quantifiate(lena2D, 3, 0.5);
+		{
+			Signal2D lenaSave = lena2D;
+			Signal2D lena2D_quant = lena2D;
+			Signal2D lena2D_noquant = lena2D;
+			amr::analyse(lena2D_quant, 3);
+			amr::analyse(lena2D_noquant, 3);
+			auto debits = tools::computeDebit(lena2D_quant, 3, 4);
+			tools::quantifiate(lena2D_quant, 3, debits);
+
+			{
+				Signal2D lenaCopy = lena2D_quant;
+				tools::arrange(lenaCopy, 3);
+				lenaCopy.save("./data/lenaBmp/amr_analyse_quant4.bmp");
+			}
+			{
+				Signal2D lenaCopy = lena2D_noquant;
+				tools::arrange(lenaCopy, 3);
+				lenaCopy.save("./data/lenaBmp/amr_analyse_noquant.bmp");
+			}
+			amr::synthese(lena2D_quant, 3);
+			amr::synthese(lena2D_noquant, 3);
+			lena2D_quant.save("./data/lenaBmp/amr_analyse_quant4.bmp");
+			lena2D_noquant.save("./data/lenaBmp/amr_synthese_noquant.bmp");
+
+			std::cout << "PSNR 4bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
+		}
 
 		{
-			Signal2D lenaCopy = lena2D;
-			tools::arrange(lenaCopy, 3);
-			lenaCopy.save("./data/lenaBmp/test_quant.bmp");
-		}
-		{
-			Signal2D lenaCopy = lena2D_noquant;
-			tools::arrange(lenaCopy, 3);
-			lenaCopy.save("./data/lenaBmp/test_noquant.bmp");
-		}
-		amr::synthese(lena2D, 3);
-		amr::synthese(lena2D_noquant, 3);
-		lena2D.save("./data/lenaBmp/test2_quant.bmp");
-		lena2D_noquant.save("./data/lenaBmp/test2_noquant.bmp");
+			Signal2D lenaSave = lena2D;
+			Signal2D lena2D_quant = lena2D;
+			amr::analyse(lena2D_quant, 3);
+			auto debits = tools::computeDebit(lena2D_quant, 3, 2);
+			tools::quantifiate(lena2D_quant, 3, debits);
 
-		std::cout << "Erreur significative : " << tools::significantError(lena2D, lenaSave) << std::endl;
-		std::cout << "PSNR : " << tools::psnr(lena2D, lenaSave) << std::endl;
+			{
+				Signal2D lenaCopy = lena2D_quant;
+				tools::arrange(lenaCopy, 3);
+				lenaCopy.save("./data/lenaBmp/amr_analyse_quant2.bmp");
+			}
+
+			amr::synthese(lena2D_quant, 3);
+			lena2D_quant.save("./data/lenaBmp/amr_synthese_quant2.bmp");
+
+			std::cout << "PSNR 2bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
+		}
+
+		{
+			Signal2D lenaSave = lena2D;
+			Signal2D lena2D_quant = lena2D;
+			amr::analyse(lena2D_quant, 3);
+			auto debits = tools::computeDebit(lena2D_quant, 3, 1);
+			tools::quantifiate(lena2D_quant, 3, debits);
+
+			{
+				Signal2D lenaCopy = lena2D_quant;
+				tools::arrange(lenaCopy, 3);
+				lenaCopy.save("./data/lenaBmp/amr_analyse_quant1.bmp");
+			}
+			amr::synthese(lena2D_quant, 3);
+			lena2D_quant.save("./data/lenaBmp/amr_synthese_quant1.bmp");
+
+			std::cout << "PSNR 1bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
+		}
+
+		{
+			Signal2D lenaSave = lena2D;
+			Signal2D lena2D_quant = lena2D;
+			amr::analyse(lena2D_quant, 3);
+
+			auto debits = tools::computeDebit(lena2D_quant, 3, 0.5);
+			tools::quantifiate(lena2D_quant, 3, debits);
+			{
+				Signal2D lenaCopy = lena2D_quant;
+				tools::arrange(lenaCopy, 3);
+				lenaCopy.save("./data/lenaBmp/amr_analyse_quant05.bmp");
+			}
+			amr::synthese(lena2D_quant, 3);
+			lena2D_quant.save("./data/lenaBmp/amr_synthese_quant05.bmp");
+
+			std::cout << "PSNR 0.5bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
+		}
 	} catch(const std::string& s)
 	{
 		std::cerr << "EXCEPTION: " << s << std::endl;

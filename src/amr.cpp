@@ -76,7 +76,7 @@ namespace amr
 		Signal2D dd(s.subSignal(tmpSize, tmpSize, tmpSize));
 		
 		//tools::addValue(dl, 127); tools::addValue(dc,127); tools::addValue(dd,127);
-		auto varda = tools::variance(tmp);
+		/*auto varda = tools::variance(tmp);
 		auto vardl = tools::variance(dl);
 		auto vardc = tools::variance(dc);
 		auto vardd = tools::variance(dd);
@@ -91,7 +91,7 @@ namespace amr
 		std::cout << "\tMoyenne dd : " << tools::average(dd) << std::endl;
 		std::cout << "\tVariance dd : " << vardd << std::endl << std::endl;
 		std::cout << "Moyenne des variances: " << (varda+vardl+vardc+vardd)/4 << std::endl;
-		/*s.fill(dl, tmpSize, 0, tmpSize);
+		*//*s.fill(dl, tmpSize, 0, tmpSize);
 		s.fill(dc, 0, tmpSize, tmpSize);
 		s.fill(dd, tmpSize, tmpSize, tmpSize);*/
 
