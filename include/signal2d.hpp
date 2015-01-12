@@ -4,6 +4,7 @@
 #define C_SIGNAL2D_HPP
 
 #include <memory>
+#include <cstdint>
 
 #include "signal.hpp"
 
