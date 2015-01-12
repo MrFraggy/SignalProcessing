@@ -23,6 +23,23 @@ int main(void)
 	// Signal cpy = signal;
 	// tools::filtrage(cpy, filtre);
 	// cpy.save("test.dat");
+
+	//////////////////////////////////////////////
+	/// RAMPE
+	//////////////////////////////////////////////
+/*
+	Signal rampe(256);
+	for(int i = 0; i<rampe.getSize(); ++i)
+		rampe[i] = i;
+
+	haar::analyse(rampe);
+	rampe.savepng("./data/rampe/haaranalyse.png");
+	haar::synthese(rampe);
+	rampe.savepng("./data/rampe/haar.png");
+	biortho97::analyse(rampe);
+	rampe.savepng("./data/rampe/biortho97analyse.png");
+	biortho97::synthese(rampe);
+	rampe.savepng("./data/rampe/biortho97.png");*/
 	
 
 	//////////////////////////////////////////////
@@ -61,23 +78,6 @@ int main(void)
 	std::cout << "Error Lift: " << tools::significantError(signal, signalLift) << std::endl;
 	std::cout << "Error Haar: " << tools::significantError(signal, signalHaar) << std::endl;
 	std::cout << "Error Biortho: " << tools::significantError(signal, signalBiortho) << std::endl;
-
-	//////////////////////////////////////////////
-	/// RAMPE
-	//////////////////////////////////////////////
-/*
-	Signal rampe(256);
-	for(int i = 0; i<rampe.getSize(); ++i)
-		rampe[i] = i;
-
-	haar::analyse(rampe);
-	rampe.savepng("./data/rampe/haaranalyse.png");
-	haar::synthese(rampe);
-	rampe.savepng("./data/rampe/haar.png");
-	biortho97::analyse(rampe);
-	rampe.savepng("./data/rampe/biortho97analyse.png");
-	biortho97::synthese(rampe);
-	rampe.savepng("./data/rampe/biortho97.png");*/
 
 	//////////////////////////////////////////////
 	/// LENA SIGNAL 1D
