@@ -33,3 +33,8 @@ bin/*
 *.config
 *.includes
 *.files
+
+*.png
+*.odt
+*.pdf
+*lock*
