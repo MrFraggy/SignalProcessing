@@ -146,7 +146,9 @@ int main(void)
 		Signal2D tmp = lena2D.subSignal(0,0,256);*/
 		Signal2D lenaSave = lena2D;
 		amr::analyse(lena2D, 3);
-//		auto v = tools::computeDebit(lena2D, 3, 0.5);
+		auto v = tools::computeDebit(lena2D, 3, 0.5);
+		for(auto& b : v)
+			std::cout << b << std::endl;
 		tools::quantifiate(lena2D, 3, 0.5);
 		Signal2D lenaCopy = lena2D;
 		tools::arrange(lenaCopy, 3);

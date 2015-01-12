@@ -82,7 +82,7 @@ namespace amr
 		auto vardd = tools::variance(dd);
 		std::cout << "Analyse " << tmpSize << ": " << std::endl;
 		std::cout << "\tMoyenne da : " << tools::average(tmp) << std::endl;
-		std::cout << "\tVariance d : " << varda << std::endl;
+		std::cout << "\tVariance da : " << varda << std::endl;
 		
 		std::cout << "\tMoyenne dl : " << tools::average(dl) << std::endl;
 		std::cout << "\tVariance dl : " << vardl << std::endl;

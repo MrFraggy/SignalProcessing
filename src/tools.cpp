@@ -288,14 +288,18 @@ std::vector<double> computeDebit(const Signal2D& s, int level, double debitGloba
 	for(auto& i : variances)
 	{
 		double product = 1;
-		for(auto& j: variances)
+		for(auto& j : variances)
 		{
-			product *= std::pow(j.var*j.var, (j.size)/size);
+			product *= std::pow(j.var, (j.size*j.size)*1.0/(size*size));
 		}
-		double bi = debitGlobal+ 0.5 * std::log2((i.var*i.var)/product);
+
+		double bi = debitGlobal+ 0.5 * std::log2(i.var/product);
 		debits.push_back(bi);
 	}
-
+	for(int i = 0; i<variances.size(); ++i)
+	{
+		std::cout << variances[i].var << " " << debits[i] << std::endl;
+	}
 	return debits;
 /*
 	for(uint32_t i = 0; i<size; ++i)
@@ -310,11 +314,12 @@ std::vector<double> computeDebit(const Signal2D& s, int level, double debitGloba
 void quantifiate(Signal2D& s, int level, double debitGlobal)
 {
 	auto v = computeDebit(s, level, debitGlobal);
+	
 	uint32_t size = s.getSize();
 	uint32_t minSize = size/std::pow(2, level);
 	{
 		Signal2D da(s.subSignal(0,0,minSize));
-		quantlm(da.get(), da.getSize(), pow(2,v[0]));
+		quantlm(da.get(), da.getSize(), std::floor(pow(2,v[0])));
 		s.fill(da, 0,0,minSize);
 	}
 
@@ -325,9 +330,9 @@ void quantifiate(Signal2D& s, int level, double debitGlobal)
 		Signal2D dc(s.subSignal(0, i, i));
 		Signal2D dd(s.subSignal(i, i, i));
 		
-		quantlm(dl.get(), dl.getSize(), pow(2,v[idx++]));
-		quantlm(dc.get(), dc.getSize(), pow(2,v[idx++]));
-		quantlm(dd.get(), dd.getSize(), pow(2,v[idx++]));
+		quantlm(dl.get(), dl.getSize(), std::floor(pow(2,v[idx++])));
+		quantlm(dc.get(), dc.getSize(), std::floor(pow(2,v[idx++])));
+		quantlm(dd.get(), dd.getSize(), std::floor(pow(2,v[idx++])));
 	
 		s.fill(dl, i,0,i);
 		s.fill(dc, 0,i,i);
