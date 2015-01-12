@@ -26,8 +26,11 @@ namespace tools
 	double debit(const double globalDebit, const double var);
 
 	double significantError(const Signal& s1, const Signal& s2);
+	double significantError(const Signal2D& s1, const Signal2D& s2);
 
 	void minMaxAverage(const Signal& s1, unsigned int level);
+
+	void arrange(Signal2D& s, unsigned int level);
 }
 
 #endif

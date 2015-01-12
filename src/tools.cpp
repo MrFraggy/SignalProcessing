@@ -86,6 +86,25 @@ double significantError(const Signal& s1, const Signal& s2)
 	return error;
 }
 
+double significantError(const Signal2D& s1, const Signal2D& s2)
+{
+	double error = 0.;
+	if(s1.getSize() != s2.getSize())
+		throw std::string("Signals doesn't have the same size");
+
+	uint32_t size = s1.getSize();
+	for(uint32_t i = 0; i<size; ++i)
+	{
+		for(uint32_t j = 0; j<size; ++j)
+		{
+			double tmp = (s1[i*size+j]-s2[i*size+j])*(s1[i*size+j]-s2[i*size+j]);
+			error += std::isnan(tmp) ? 0 : tmp;
+		}
+	}
+
+	return error/(size*size);
+}
+
 double average(const Signal& s)
 {
 	double average = 0;
@@ -146,7 +165,7 @@ double variance(const Signal2D& s)
 
 double debit(const double globalDebit, const double var)
 {
-	return NULL;
+	return 0.0;
 }
 
 void minMaxAverage(const Signal& s1, unsigned int level)
@@ -220,4 +239,25 @@ void linearize(Signal2D& s)
 		s[i] = (s[i])/(max) * 255;
 	}
 }
+
+void arrange(Signal2D& s, unsigned int niveau)
+{
+	int size = s.getSize()/(std::pow(2,niveau));
+	Signal2D tmp = s.subSignal(0,0,size);
+	linearize(tmp);
+	s.fill(tmp,0,0,size);
+	for(uint32_t i = size; i<s.getSize(); i = i*2)
+	{
+		Signal2D dl(s.subSignal(i, 0, i));
+		Signal2D dc(s.subSignal(0, i, i));
+		Signal2D dd(s.subSignal(i, i, i));
+		
+		tools::addValue(dl, 127); tools::addValue(dc,127); tools::addValue(dd,127);
+
+		s.fill(dl, i, 0, i);
+		s.fill(dc, 0, i, i);
+		s.fill(dd, i, i, i);
+	}
+}
+
 }

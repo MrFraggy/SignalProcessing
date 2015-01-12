@@ -144,14 +144,17 @@ int main(void)
 
 		lena2D.save("./data/lenaBmp/test.bmp");
 		Signal2D tmp = lena2D.subSignal(0,0,256);*/
+		Signal2D lenaSave = lena2D;
 		amr::analyse(lena2D, 3);
-		lena2D.save("./data/lenaBmp/test.bmp");
+		Signal2D lenaCopy = lena2D;
+		tools::arrange(lenaCopy, 3);
+		lenaCopy.save("./data/lenaBmp/test.bmp");
 		amr::synthese(lena2D, 3);
 		lena2D.save("./data/lenaBmp/test2.bmp");
 
-		Signal lena512_last = lena2D.getLine(255);
+		//Signal lena512_last = lena2D.getLine(255);
 
-		std::cout << "Erreur significative : " << tools::significantError(lena512, lena512_last) << std::endl;
+		std::cout << "Erreur significative : " << tools::significantError(lena2D, lenaSave) << std::endl;
 	} catch(const std::string& s)
 	{
 		std::cerr << "EXCEPTION: " << s << std::endl;

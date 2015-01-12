@@ -57,7 +57,7 @@ namespace amr
 		biortho97::analyse(s);
 
 		Signal2D tmp(s.subSignal(0,0,tmpSize));
-		tools::linearize(tmp);
+		//tools::linearize(tmp);
 
 		analyse(tmp, niveau-1);
 
@@ -71,23 +71,26 @@ namespace amr
 			}
 		}*/
 
-		Signal2D dl(s.subSignal(tmpSize, 0, tmpSize));
+		/*Signal2D dl(s.subSignal(tmpSize, 0, tmpSize));
 		Signal2D dc(s.subSignal(0, tmpSize, tmpSize));
-		Signal2D dd(s.subSignal(tmpSize, tmpSize, tmpSize));
+		Signal2D dd(s.subSignal(tmpSize, tmpSize, tmpSize));*/
 		
-		tools::addValue(dl, 127); tools::addValue(dc,127); tools::addValue(dd,127);
+		//tools::addValue(dl, 127); tools::addValue(dc,127); tools::addValue(dd,127);
 
 		std::cout << "Analyse " << tmpSize << ": " << std::endl;
+		std::cout << "\tMoyenne dl : " << tools::average(tmp) << std::endl;
+		std::cout << "\tVariance dl : " << tools::variance(tmp) << std::endl;
+		/*
 		std::cout << "\tMoyenne dl : " << tools::average(dl) << std::endl;
 		std::cout << "\tVariance dl : " << tools::variance(dl) << std::endl;
 		std::cout << "\tMoyenne dc : " << tools::average(dc) << std::endl;
 		std::cout << "\tVariance dc : " << tools::variance(dc) << std::endl;
 		std::cout << "\tMoyenne dd : " << tools::average(dd) << std::endl;
 		std::cout << "\tVariance dd : " << tools::variance(dd) << std::endl << std::endl;
-
-		s.fill(dl, tmpSize, 0, tmpSize);
+*/
+		/*s.fill(dl, tmpSize, 0, tmpSize);
 		s.fill(dc, 0, tmpSize, tmpSize);
-		s.fill(dd, tmpSize, tmpSize, tmpSize);
+		s.fill(dd, tmpSize, tmpSize, tmpSize);*/
 
 		s.fill(tmp, 0, 0, tmp.getSize());
 	}
@@ -110,7 +113,7 @@ namespace amr
 			}
 		}*/
 
-		Signal2D dl(s.subSignal(size, 0, size));
+		/*Signal2D dl(s.subSignal(size, 0, size));
 		Signal2D dc(s.subSignal(0, size, size));
 		Signal2D dd(s.subSignal(size, size, size));
 		
@@ -118,14 +121,14 @@ namespace amr
 
 		s.fill(dl, size, 0, size);
 		s.fill(dc, 0, size, size);
-		s.fill(dd, size, size, size);
+		s.fill(dd, size, size, size);*/
 
 		size *= 2;
 		Signal2D tmp = s.subSignal(0,0,size);
 
 		biortho97::synthese(tmp);
 
-		tools::linearize(tmp);
+		//tools::linearize(tmp);
 		
 		s.fill(tmp, 0, 0, size);
 	}
