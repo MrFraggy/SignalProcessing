@@ -19,7 +19,8 @@ OBJ_FILES = $(PATH_OBJ)/main.o \
 			$(PATH_OBJ)/lifting.o \
 			$(PATH_OBJ)/biortho97.o \
 			$(PATH_OBJ)/haar.o \
-			$(PATH_OBJ)/bmp.o
+			$(PATH_OBJ)/bmp.o \
+			$(PATH_OBJ)/quantlm.o
 
 GCC_OPTS = -std=c++11 -Wall -g
 

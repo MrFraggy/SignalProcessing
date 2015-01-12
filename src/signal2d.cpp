@@ -72,7 +72,7 @@ void Signal2D::setColumn(const Signal& s, int col)
 		data.get()[col+i*size] = s[i];
 }
 
-Signal Signal2D::getLine(int line) 
+Signal Signal2D::getLine(int line) const
 {
 	Signal s(size);
 	for(uint32_t i = 0; i<size; ++i)
@@ -80,7 +80,7 @@ Signal Signal2D::getLine(int line)
 	return s;
 }
 
-Signal Signal2D::getColumn(int col) 
+Signal Signal2D::getColumn(int col) const
 {
 	Signal s(size);
 	for(uint32_t i = 0; i<size; ++i)
@@ -93,7 +93,7 @@ uint32_t Signal2D::getSize() const
 	return size;
 }
 
-Signal2D Signal2D::subSignal(int x, int y, int length)
+Signal2D Signal2D::subSignal(int x, int y, int length) const
 {
 	Signal2D s(length);
 	for(int i = 0; i<length; ++i)

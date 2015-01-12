@@ -1,6 +1,7 @@
 #include "tools.hpp"
 #include "signal.hpp"
 #include "signal2d.hpp"
+#include "quantlm.hpp"
 #include <iostream>
 #include <sstream>
 #include <cmath>
@@ -83,7 +84,7 @@ double significantError(const Signal& s1, const Signal& s2)
 		error += std::isnan(tmp) ? 0 : tmp;
 	}
 
-	return error;
+	return error/s1.getSize();
 }
 
 double significantError(const Signal2D& s1, const Signal2D& s2)
@@ -93,16 +94,19 @@ double significantError(const Signal2D& s1, const Signal2D& s2)
 		throw std::string("Signals doesn't have the same size");
 
 	uint32_t size = s1.getSize();
-	for(uint32_t i = 0; i<size; ++i)
+	for(uint32_t i = 0; i<size*size; ++i)
 	{
-		for(uint32_t j = 0; j<size; ++j)
-		{
-			double tmp = (s1[i*size+j]-s2[i*size+j])*(s1[i*size+j]-s2[i*size+j]);
-			error += std::isnan(tmp) ? 0 : tmp;
-		}
+		double tmp = (s1[i]-s2[i])*(s1[i]-s2[i]);
+		error += std::isnan(tmp) ? 0 : tmp;
 	}
 
 	return error/(size*size);
+}
+
+double psnr(const Signal2D& s1, const Signal2D& s2)
+{
+	double eqm = significantError(s1,s2);
+	return 10*std::log10((255*255)/eqm);
 }
 
 double average(const Signal& s)
@@ -254,4 +258,81 @@ void arrange(Signal2D& s, unsigned int niveau)
 	}
 }
 
+std::vector<double> computeDebit(const Signal2D& s, int level, double debitGlobal)
+{
+	struct Var {
+		double var;
+		uint32_t size;
+	};
+
+	uint32_t size = s.getSize();
+	uint32_t minSize = size/std::pow(2, level);
+	std::vector<Var> variances;
+	{
+		Signal2D da(s.subSignal(0,0,minSize));
+		variances.push_back({variance(da), minSize});
+	}
+
+	for(uint32_t i = minSize; i<size; i *= 2)
+	{
+		Signal2D dl(s.subSignal(i, 0, i));
+		Signal2D dc(s.subSignal(0, i, i));
+		Signal2D dd(s.subSignal(i, i, i));
+		variances.push_back({variance(dl),i});
+		variances.push_back({variance(dc),i});
+		variances.push_back({variance(dd),i});
+	}
+
+	std::vector<double> debits;
+
+	for(auto& i : variances)
+	{
+		double product = 1;
+		for(auto& j: variances)
+		{
+			product *= std::pow(j.var*j.var, (j.size)/size);
+		}
+		double bi = debitGlobal+ 0.5 * std::log2((i.var*i.var)/product);
+		debits.push_back(bi);
+	}
+
+	return debits;
+/*
+	for(uint32_t i = 0; i<size; ++i)
+	{
+		for(uint32_t j = 0; j<size; ++j)
+		{
+
+		}
+	}*/
+}
+
+void quantifiate(Signal2D& s, int level, double debitGlobal)
+{
+	auto v = computeDebit(s, level, debitGlobal);
+	uint32_t size = s.getSize();
+	uint32_t minSize = size/std::pow(2, level);
+	{
+		Signal2D da(s.subSignal(0,0,minSize));
+		quantlm(da.get(), da.getSize(), pow(2,v[0]));
+		s.fill(da, 0,0,minSize);
+	}
+
+	int idx = 1;
+	for(uint32_t i = minSize; i<size; i *= 2)
+	{
+		Signal2D dl(s.subSignal(i, 0, i));
+		Signal2D dc(s.subSignal(0, i, i));
+		Signal2D dd(s.subSignal(i, i, i));
+		
+		quantlm(dl.get(), dl.getSize(), pow(2,v[idx++]));
+		quantlm(dc.get(), dc.getSize(), pow(2,v[idx++]));
+		quantlm(dd.get(), dd.getSize(), pow(2,v[idx++]));
+	
+		s.fill(dl, i,0,i);
+		s.fill(dc, 0,i,i);
+		s.fill(dd, i,i,i);
+	}
+
+}
 }
