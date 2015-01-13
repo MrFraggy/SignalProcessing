@@ -74,10 +74,11 @@ int main(void)
 	amr::synthese(signalAMR, 1);
 	signalAMR.savepng("./data/leleccum/amr.png");
 
-	std::cout << "Error: " << tools::significantError(signal, signal) << std::endl;
+	std::cout << "Error de test (signal avec lui même): " << tools::significantError(signal, signal) << std::endl;
 	std::cout << "Error Lift: " << tools::significantError(signal, signalLift) << std::endl;
 	std::cout << "Error Haar: " << tools::significantError(signal, signalHaar) << std::endl;
 	std::cout << "Error Biortho: " << tools::significantError(signal, signalBiortho) << std::endl;
+	std::cout << "Error AMR: " << tools::significantError(signal, signalAMR) << std::endl;
 
 	//////////////////////////////////////////////
 	/// LENA SIGNAL 1D
@@ -85,25 +86,32 @@ int main(void)
 	
 	Signal lena1D;
 	lena1D.load("./data/lena.txt");
+
+	signalHaar = lena1D;
+	signalBiortho = lena1D;
+	signalLift = lena1D;
+	signalAMR = lena1D;
 	
-	haar::analyse(lena1D);
-	lena1D.savepng("./data/lena1D/haaranalyse.png");
-	haar::synthese(lena1D);
-	lena1D.savepng("./data/lena1D/haar.png");
-	biortho97::analyse(lena1D);
-	lena1D.savepng("./data/lena1D/biortho97analyse.png");
-	biortho97::synthese(lena1D);
-	lena1D.savepng("./data/lena1D/biortho97.png");
-	lifting::analyse(lena1D);
-	lena1D.savepng("./data/lena1D/liftinganalyse.png");
-	lifting::synthese(lena1D);
-	lena1D.savepng("./data/lena1D/lifting.png");
+	haar::analyse(signalHaar);
+	signalHaar.savepng("./data/lena1D/haaranalyse.png");
+	haar::synthese(signalHaar);
+	signalHaar.savepng("./data/lena1D/haar.png");
+	biortho97::analyse(signalBiortho);
+	signalBiortho.savepng("./data/lena1D/biortho97analyse.png");
+	biortho97::synthese(signalBiortho);
+	signalBiortho.savepng("./data/lena1D/biortho97.png");
+	lifting::analyse(signalLift);
+	signalLift.savepng("./data/lena1D/liftinganalyse.png");
+	lifting::synthese(signalLift);
+	signalLift.savepng("./data/lena1D/lifting.png");
 
 	/*
 		Q : Tracez et commentez les courbes des coefficients.
 		Décrivez les interêts du "lifting".
 		R : Même resultat mais plus facile à réutiliser/implementer?
 	*/
+
+
 
 	//////////////////////////////////////////////
 	/// LENA SIGNAL 2D
@@ -283,13 +291,5 @@ int main(void)
 
 		
 	*/
-
-	
-
-
-	//////////////////////////////////////////////
-	/// LENA BMP
-	//////////////////////////////////////////////
-
 	return 0;
 }
