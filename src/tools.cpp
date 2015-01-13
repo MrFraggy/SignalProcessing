@@ -2,8 +2,10 @@
 #include "signal.hpp"
 #include "signal2d.hpp"
 #include "quantlm.hpp"
+#include "program.hpp"
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <cmath>
 
 #define EPSILON 0.00001
@@ -337,8 +339,9 @@ void quantifiate(Signal2D& s, int level, std::vector<double> debits)
 	}
 }
 
-void encode(Signal2D& s, int level, std::vector<double> debits)
+void encode(const Signal2D& signal, int level, std::vector<double> debits, const std::string& filename)
 {
+	Signal2D s = signal;
 	uint32_t size = s.getSize();
 	uint32_t minSize = size/std::pow(2, level);
 	int idx = 0;
@@ -363,6 +366,24 @@ void encode(Signal2D& s, int level, std::vector<double> debits)
 		s.fill(dd, i,i,i);
 	}
 
-	
-}
+	std::ofstream file(filename, std::ios::binary);
+	if(!file || !file.is_open())
+	{
+		std::cerr << "Cannot open file " << filename << " for writing";
+		return;
+	}
+	for(uint32_t i = 0; i<size*size; ++i)
+	{
+		int16_t v = static_cast<int16_t>(s[i]);
+		file.write((char*)&v, sizeof(int16_t));
+	}
+
+	Program p("gzip "+filename);
+	if(!p.isValid())
+	{
+		std::cerr << "Cannot start gzip to compress the file" << std::endl;
+		return;
+	}
+
+}	
 }

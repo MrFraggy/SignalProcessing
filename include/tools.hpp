@@ -4,6 +4,7 @@
 #define C_SIGNALPROCESSINH_HPP
 
 #include <vector>
+#include <string>
 
 class Signal;
 class Signal2D;
@@ -39,6 +40,8 @@ namespace tools
 	std::vector<double> computeDebit(const Signal2D& s, int level, double debitGlobal);
 
 	void quantifiate(Signal2D& s, int level, std::vector<double> debits);
+
+	void encode(const Signal2D& s, int level, std::vector<double> debits, const std::string& filename);
 }
 
 #endif

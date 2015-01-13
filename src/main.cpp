@@ -173,10 +173,11 @@ int main(void)
 			amr::synthese(lena2D_noquant, 3);
 			lena2D_quant.save("./data/lenaBmp/amr_analyse_quant4.bmp");
 			lena2D_noquant.save("./data/lenaBmp/amr_synthese_noquant.bmp");
-
+		
 			std::cout << "PSNR 4bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
+			tools::encode(lena2D_quant, 3, debits, "./data/lenaBmp/compressed4.bin");	
 		}
-
+		/*
 		{
 			Signal2D lenaSave = lena2D;
 			Signal2D lena2D_quant = lena2D;
@@ -213,7 +214,7 @@ int main(void)
 
 			std::cout << "PSNR 1bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
 		}
-
+*/
 		{
 			Signal2D lenaSave = lena2D;
 			Signal2D lena2D_quant = lena2D;
@@ -228,8 +229,9 @@ int main(void)
 			}
 			amr::synthese(lena2D_quant, 3);
 			lena2D_quant.save("./data/lenaBmp/amr_synthese_quant05.bmp");
-
 			std::cout << "PSNR 0.5bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
+
+			tools::encode(lena2D_quant, 3, debits, "./data/lenaBmp/compressed0_5.bin");
 		}
 	} catch(const std::string& s)
 	{
