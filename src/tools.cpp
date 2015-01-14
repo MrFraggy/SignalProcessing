@@ -7,6 +7,7 @@
 #include <sstream>
 #include <fstream>
 #include <cmath>
+#include <cassert>
 
 #define EPSILON 0.00001
 inline bool FEQUALS(double x, double y) { return std::fabs(x-y) < EPSILON; }
@@ -74,8 +75,7 @@ Signal& filtrage(Signal& x, const Signal& h)
 double significantError(const Signal& s1, const Signal& s2)
 {
 	double error = 0.;
-	if(s1.getSize() != s2.getSize())
-		throw std::string("Signals doesn't have the same size");
+	assert(s1.getSize() == s2.getSize() && "Signals doesn't have the same size");
 
 	if(s1.getOffset() != s2.getOffset())
 		throw std::string("Signals doesn't have the same start time");
@@ -92,8 +92,7 @@ double significantError(const Signal& s1, const Signal& s2)
 double significantError(const Signal2D& s1, const Signal2D& s2)
 {
 	double error = 0.;
-	if(s1.getSize() != s2.getSize())
-		throw std::string("Signals doesn't have the same size");
+	assert(s1.getSize() == s2.getSize() && "Signals doesn't have the same size");
 
 	uint32_t size = s1.getSize();
 	for(uint32_t i = 0; i<size*size; ++i)

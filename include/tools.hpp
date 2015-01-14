@@ -16,8 +16,6 @@ namespace tools
 
 	Signal& filtrage(Signal& x, const Signal& h);
 
-	float maximumLevel(const Signal& s);
-
 	void addValue(Signal2D& s, double d);
 	void linearize(Signal2D& s);
 

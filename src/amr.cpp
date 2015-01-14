@@ -91,7 +91,8 @@ namespace amr
 		std::cout << "\tMoyenne dd : " << tools::average(dd) << std::endl;
 		std::cout << "\tVariance dd : " << vardd << std::endl << std::endl;
 		std::cout << "Moyenne des variances: " << (varda+vardl+vardc+vardd)/4 << std::endl;
-		*//*s.fill(dl, tmpSize, 0, tmpSize);
+		*/
+		/*s.fill(dl, tmpSize, 0, tmpSize);
 		s.fill(dc, 0, tmpSize, tmpSize);
 		s.fill(dd, tmpSize, tmpSize, tmpSize);*/
 

@@ -27,7 +27,7 @@ int main(void)
 	//////////////////////////////////////////////
 	/// RAMPE
 	//////////////////////////////////////////////
-/*
+	/*
 	Signal rampe(256);
 	for(int i = 0; i<rampe.getSize(); ++i)
 		rampe[i] = i;
@@ -42,9 +42,9 @@ int main(void)
 	rampe.savepng("./data/rampe/biortho97.png");*/
 	
 
-	//////////////////////////////////////////////
-	/// LELECUM
-	//////////////////////////////////////////////
+	std::cout << "//////////////////////////////////////////////" << std::endl;
+	std::cout << "/// LELECUM" << std::endl;
+	std::cout << "//////////////////////////////////////////////" << std::endl;
 
 	Signal signal;
 	signal.load("./data/leleccum.txt");
@@ -80,9 +80,9 @@ int main(void)
 	std::cout << "Error Biortho: " << tools::significantError(signal, signalBiortho) << std::endl;
 	std::cout << "Error AMR: " << tools::significantError(signal, signalAMR) << std::endl;
 
-	//////////////////////////////////////////////
-	/// LENA SIGNAL 1D
-	//////////////////////////////////////////////
+	std::cout << std::endl << "//////////////////////////////////////////////" << std::endl;
+	std::cout << "/// LENA SIGNAL 1D" << std::endl;
+	std::cout << "//////////////////////////////////////////////" << std::endl;
 	
 	Signal lena1D;
 	lena1D.load("./data/lena.txt");
@@ -90,7 +90,9 @@ int main(void)
 	signalHaar = lena1D;
 	signalBiortho = lena1D;
 	signalLift = lena1D;
-	signalAMR = lena1D;
+	Signal signalAMR2 = lena1D;
+	Signal signalAMR4 = lena1D;
+	Signal signalAMRMax = lena1D;
 	
 	haar::analyse(signalHaar);
 	signalHaar.savepng("./data/lena1D/haaranalyse.png");
@@ -105,6 +107,27 @@ int main(void)
 	lifting::synthese(signalLift);
 	signalLift.savepng("./data/lena1D/lifting.png");
 
+	// amr 2, 4, Max
+	amr::analyse(signalAMR2, 2);
+	tools::minMaxAverage(signalAMR2, 2);
+	signalAMR2.savepng("./data/lena1D/amr2decomp.png");
+	amr::synthese(signalAMR2, 2);
+	signalAMR2.savepng("./data/lena1D/amr2recomp.png");
+	std::cout << "Error AMR niveau 2: " << tools::significantError(lena1D, signalAMR2) << std::endl;
+
+	amr::analyse(signalAMR4, 4);
+	tools::minMaxAverage(signalAMR4, 4);
+	signalAMR4.savepng("./data/lena1D/amr4decomp.png");
+	amr::synthese(signalAMR4, 4);
+	signalAMR4.savepng("./data/lena1D/amr4recomp.png");
+	std::cout << "Error AMR niveau 4: " << tools::significantError(lena1D, signalAMR4) << std::endl;
+
+	float maxLvl = amr::maximumLevel(signalAMRMax);
+	amr::analyse(signalAMRMax, maxLvl);
+	signalAMRMax.savepng("./data/lena1D/amrmaxdecomp.png");
+	amr::synthese(signalAMRMax, maxLvl);
+	signalAMRMax.savepng("./data/lena1D/amrmaxrecomp.png");
+	std::cout << "Error AMR niveau max: " << tools::significantError(lena1D, signalAMRMax) << std::endl;
 	/*
 		Q : Tracez et commentez les courbes des coefficients.
 		Décrivez les interêts du "lifting".
@@ -113,129 +136,127 @@ int main(void)
 
 
 
-	//////////////////////////////////////////////
-	/// LENA SIGNAL 2D
-	//////////////////////////////////////////////
+	std::cout << std::endl << "//////////////////////////////////////////////" << std::endl;
+	std::cout << "/// LENA SIGNAL 2D" << std::endl;
+	std::cout << "//////////////////////////////////////////////" << std::endl;
 
 	Signal2D lena2D;
 	lena2D.load("./data/lena.bmp");
 
-	Signal lena512 = lena2D.getLine(255);
+	Signal2D lena2Dbiotho = lena2D;
+	std::cout << "analyse2D_97 -> analysebiortho97.bmp" << std::endl;
+	biortho97::analyse(lena2Dbiotho);
+	lena2Dbiotho.save("./data/lenaBmp/analysebiortho97.bmp");
 
-	//////////////////////////////////////////////
-	/// AMR
-	//////////////////////////////////////////////
+	std::cout << std::endl << "//////////////////////////////////////////////" << std::endl;
+	std::cout << "/// AMR 2D & Compression" << std::endl;
+	std::cout << "//////////////////////////////////////////////" << std::endl;
 
-	try{
-
-		/*Signal lena512_1 = lena512;
-		amr::analyse(lena512_1, 1);
-		tools::minMaxAverage(lena512_1, 1);
-		amr::synthese(lena512_1, 1);
-
-		Signal lena512_2 = lena512;
-		amr::analyse(lena512_2, 2);
-		tools::minMaxAverage(lena512_2, 2);
-		amr::synthese(lena512_2, 2);
-
-		Signal lena512_4 = lena512;
-		amr::analyse(lena512_4, 4);
-		tools::minMaxAverage(lena512_4, 4);
-		lena512_4.savepng("./data/lena512/liftinganalyse_4.png");
-		amr::synthese(lena512_4, 4);
-
-		std::cout << tools::significantError(lena512_4, lena512origine) << std::endl;
-	*/
-		/*biortho97::analyse(lena2D);
-
-		lena2D.save("./data/lenaBmp/test.bmp");
-		Signal2D tmp = lena2D.subSignal(0,0,256);*/
-		{
-			Signal2D lenaSave = lena2D;
-			Signal2D lena2D_quant = lena2D;
-			Signal2D lena2D_noquant = lena2D;
-			amr::analyse(lena2D_quant, 3);
-			amr::analyse(lena2D_noquant, 3);
-			auto debits = tools::computeDebit(lena2D_quant, 3, 4);
-			tools::quantifiate(lena2D_quant, 3, debits);
-
-			{
-				Signal2D lenaCopy = lena2D_quant;
-				tools::arrange(lenaCopy, 3);
-				lenaCopy.save("./data/lenaBmp/amr_analyse_quant4.bmp");
-			}
-			{
-				Signal2D lenaCopy = lena2D_noquant;
-				tools::arrange(lenaCopy, 3);
-				lenaCopy.save("./data/lenaBmp/amr_analyse_noquant.bmp");
-			}
-			amr::synthese(lena2D_quant, 3);
-			amr::synthese(lena2D_noquant, 3);
-			lena2D_quant.save("./data/lenaBmp/amr_analyse_quant4.bmp");
-			lena2D_noquant.save("./data/lenaBmp/amr_synthese_noquant.bmp");
-		
-			std::cout << "PSNR 4bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
-			tools::encode(lena2D_quant, 3, debits, "./data/lenaBmp/compressed4.bin");	
-		}
-		/*
-		{
-			Signal2D lenaSave = lena2D;
-			Signal2D lena2D_quant = lena2D;
-			amr::analyse(lena2D_quant, 3);
-			auto debits = tools::computeDebit(lena2D_quant, 3, 2);
-			tools::quantifiate(lena2D_quant, 3, debits);
-
-			{
-				Signal2D lenaCopy = lena2D_quant;
-				tools::arrange(lenaCopy, 3);
-				lenaCopy.save("./data/lenaBmp/amr_analyse_quant2.bmp");
-			}
-
-			amr::synthese(lena2D_quant, 3);
-			lena2D_quant.save("./data/lenaBmp/amr_synthese_quant2.bmp");
-
-			std::cout << "PSNR 2bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
-		}
-
-		{
-			Signal2D lenaSave = lena2D;
-			Signal2D lena2D_quant = lena2D;
-			amr::analyse(lena2D_quant, 3);
-			auto debits = tools::computeDebit(lena2D_quant, 3, 1);
-			tools::quantifiate(lena2D_quant, 3, debits);
-
-			{
-				Signal2D lenaCopy = lena2D_quant;
-				tools::arrange(lenaCopy, 3);
-				lenaCopy.save("./data/lenaBmp/amr_analyse_quant1.bmp");
-			}
-			amr::synthese(lena2D_quant, 3);
-			lena2D_quant.save("./data/lenaBmp/amr_synthese_quant1.bmp");
-
-			std::cout << "PSNR 1bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
-		}
-*/
-		{
-			Signal2D lenaSave = lena2D;
-			Signal2D lena2D_quant = lena2D;
-			amr::analyse(lena2D_quant, 3);
-
-			auto debits = tools::computeDebit(lena2D_quant, 3, 0.5);
-			tools::quantifiate(lena2D_quant, 3, debits);
-			{
-				Signal2D lenaCopy = lena2D_quant;
-				tools::arrange(lenaCopy, 3);
-				lenaCopy.save("./data/lenaBmp/amr_analyse_quant05.bmp");
-			}
-			amr::synthese(lena2D_quant, 3);
-			lena2D_quant.save("./data/lenaBmp/amr_synthese_quant05.bmp");
-			std::cout << "PSNR 0.5bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
-
-			tools::encode(lena2D_quant, 3, debits, "./data/lenaBmp/compressed0_5.bin");
-		}
-	} catch(const std::string& s)
 	{
-		std::cerr << "EXCEPTION: " << s << std::endl;
+		Signal2D lenaSave = lena2D;
+		amr::analyse(lenaSave, 3);
+
+		{
+			Signal2D lenaCopy = lenaSave;
+			tools::arrange(lenaCopy, 3);
+			lenaCopy.save("./data/lenaBmp/amr_analyse_niveau3.bmp");
+		}
+		amr::synthese(lenaSave, 3);
+		lenaSave.save("./data/lenaBmp/amr_synthese_niveau3.bmp");
+
+		double error = 0;
+
+		for (unsigned int i = 0; i < lenaSave.getSize(); ++i)
+		{
+			error += tools::significantError(lenaSave.getLine(i), lena2D.getLine(i));
+		}
+
+		std::cout << "Error AMR 2D niveau 3: " << error << std::endl << std::endl;
+		
+	}
+
+	{
+		Signal2D lenaSave = lena2D;
+		Signal2D lena2D_quant = lena2D;
+		Signal2D lena2D_noquant = lena2D;
+		amr::analyse(lena2D_quant, 3);
+		amr::analyse(lena2D_noquant, 3);
+		auto debits = tools::computeDebit(lena2D_quant, 3, 4);
+		tools::quantifiate(lena2D_quant, 3, debits);
+
+		{
+			Signal2D lenaCopy = lena2D_quant;
+			tools::arrange(lenaCopy, 3);
+			lenaCopy.save("./data/lenaBmp/amr_analyse_quant4.bmp");
+		}
+		{
+			Signal2D lenaCopy = lena2D_noquant;
+			tools::arrange(lenaCopy, 3);
+			lenaCopy.save("./data/lenaBmp/amr_analyse_noquant.bmp");
+		}
+		amr::synthese(lena2D_quant, 3);
+		amr::synthese(lena2D_noquant, 3);
+		lena2D_quant.save("./data/lenaBmp/amr_analyse_quant4.bmp");
+		lena2D_noquant.save("./data/lenaBmp/amr_synthese_noquant.bmp");
+	
+		std::cout << "PSNR 4bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
+		tools::encode(lena2D_quant, 3, debits, "./data/lenaBmp/compressed4.bin");	
+	}
+
+	{
+		Signal2D lenaSave = lena2D;
+		Signal2D lena2D_quant = lena2D;
+		amr::analyse(lena2D_quant, 3);
+		auto debits = tools::computeDebit(lena2D_quant, 3, 2);
+		tools::quantifiate(lena2D_quant, 3, debits);
+
+		{
+			Signal2D lenaCopy = lena2D_quant;
+			tools::arrange(lenaCopy, 3);
+			lenaCopy.save("./data/lenaBmp/amr_analyse_quant2.bmp");
+		}
+
+		amr::synthese(lena2D_quant, 3);
+		lena2D_quant.save("./data/lenaBmp/amr_synthese_quant2.bmp");
+
+		std::cout << "PSNR 2bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
+	}
+
+	{
+		Signal2D lenaSave = lena2D;
+		Signal2D lena2D_quant = lena2D;
+		amr::analyse(lena2D_quant, 3);
+		auto debits = tools::computeDebit(lena2D_quant, 3, 1);
+		tools::quantifiate(lena2D_quant, 3, debits);
+
+		{
+			Signal2D lenaCopy = lena2D_quant;
+			tools::arrange(lenaCopy, 3);
+			lenaCopy.save("./data/lenaBmp/amr_analyse_quant1.bmp");
+		}
+		amr::synthese(lena2D_quant, 3);
+		lena2D_quant.save("./data/lenaBmp/amr_synthese_quant1.bmp");
+
+		std::cout << "PSNR 1bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
+	}
+
+	{
+		Signal2D lenaSave = lena2D;
+		Signal2D lena2D_quant = lena2D;
+		amr::analyse(lena2D_quant, 3);
+
+		auto debits = tools::computeDebit(lena2D_quant, 3, 0.5);
+		tools::quantifiate(lena2D_quant, 3, debits);
+		{
+			Signal2D lenaCopy = lena2D_quant;
+			tools::arrange(lenaCopy, 3);
+			lenaCopy.save("./data/lenaBmp/amr_analyse_quant05.bmp");
+		}
+		amr::synthese(lena2D_quant, 3);
+		lena2D_quant.save("./data/lenaBmp/amr_synthese_quant05.bmp");
+		std::cout << "PSNR 0.5bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
+
+		tools::encode(lena2D_quant, 3, debits, "./data/lenaBmp/compressed0_5.bin");
 	}
 
 	/* 

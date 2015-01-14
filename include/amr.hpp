@@ -13,6 +13,8 @@ namespace amr
 
 	void analyse(Signal2D& s, int niveau);
 	void synthese(Signal2D& s, int niveau);
+
+	float maximumLevel(const Signal& s);
 }
 
 #endif
