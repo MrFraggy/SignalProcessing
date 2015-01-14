@@ -24,30 +24,32 @@ int main(void)
 	// tools::filtrage(cpy, filtre);
 	// cpy.save("test.dat");
 
-	//////////////////////////////////////////////
-	/// RAMPE
-	//////////////////////////////////////////////
-	/*
+	std::cout << "//////////////////////////////////////////////" << std::endl;
+	std::cout << "/// RAMPE" << std::endl;
+	std::cout << "//////////////////////////////////////////////" << std::endl;
 	Signal rampe(256);
 	for(int i = 0; i<rampe.getSize(); ++i)
 		rampe[i] = i;
 
+	rampe.savepng("./data/rampe/origine.png");
 	haar::analyse(rampe);
 	rampe.savepng("./data/rampe/haaranalyse.png");
 	haar::synthese(rampe);
-	rampe.savepng("./data/rampe/haar.png");
+	rampe.savepng("./data/rampe/haarsynthese.png");
 	biortho97::analyse(rampe);
 	rampe.savepng("./data/rampe/biortho97analyse.png");
 	biortho97::synthese(rampe);
-	rampe.savepng("./data/rampe/biortho97.png");*/
+	rampe.savepng("./data/rampe/biortho97synthese.png");
 	
 
-	std::cout << "//////////////////////////////////////////////" << std::endl;
+	std::cout << std::endl << "//////////////////////////////////////////////" << std::endl;
 	std::cout << "/// LELECUM" << std::endl;
 	std::cout << "//////////////////////////////////////////////" << std::endl;
 
 	Signal signal;
 	signal.load("./data/leleccum.txt");
+
+	signal.savepng("./data/leleccum/origine.png");
 	
 	Signal signalHaar = signal;
 	Signal signalLift = signal;
@@ -74,7 +76,7 @@ int main(void)
 	amr::synthese(signalAMR, 1);
 	signalAMR.savepng("./data/leleccum/amr.png");
 
-	std::cout << "Error de test (signal avec lui même): " << tools::significantError(signal, signal) << std::endl;
+	std::cout << "Error Test (signal avec lui même): " << tools::significantError(signal, signal) << std::endl;
 	std::cout << "Error Lift: " << tools::significantError(signal, signalLift) << std::endl;
 	std::cout << "Error Haar: " << tools::significantError(signal, signalHaar) << std::endl;
 	std::cout << "Error Biortho: " << tools::significantError(signal, signalBiortho) << std::endl;
@@ -191,7 +193,7 @@ int main(void)
 		lena2D_quant.save("./data/lenaBmp/amr_synthese_quant4.bmp");
 	
 		std::cout << "PSNR 4bpp: " << tools::psnr(lena2D_quant, lenaSave) << std::endl;
-		
+
 		tools::encode(lena2D_quant, 3, debits, "./data/lenaBmp/compressed4.bin");	
 	}
 

@@ -108,6 +108,8 @@ bool Signal::savepng(const std::string& filename)
 	std::string cmd = "rm "+name;
 
 	system(cmd.c_str());
+
+	std::cout << "save as : " << filename << std::endl;
 	return true;
 }
 
